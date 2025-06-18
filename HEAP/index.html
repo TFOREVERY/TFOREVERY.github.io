@@ -55,7 +55,7 @@
 <meta property="og:image" content="https://tforevery.github.io/Images/1750083903679-efef5470-6839-4eb4-aa8b-a8d6b568aa28.png">
 <meta property="og:image" content="https://tforevery.github.io/Images/1750134869456-05c2d7b1-e81d-4cd0-9559-f28a57802049.png">
 <meta property="article:published_time" content="2025-06-17T09:21:15.000Z">
-<meta property="article:modified_time" content="2025-06-18T06:04:10.296Z">
+<meta property="article:modified_time" content="2025-06-18T06:24:52.991Z">
 <meta property="article:author" content="TY">
 <meta property="article:tag" content="HEAP">
 <meta name="twitter:card" content="summary_large_image">
@@ -495,7 +495,11 @@
 <p><img src="/../Images/1743083967763-e35d4ff1-4f7a-4352-a75e-b028868375b4.png" srcset="/img/loading.gif" lazyload></p>
 <p><img src="/../Images/1743083977400-a0669fcc-c54a-4be1-9f16-076ec3720d74.png" srcset="/img/loading.gif" lazyload></p>
 <h5 id="堆变化"><a href="#堆变化" class="headerlink" title="堆变化"></a>堆变化</h5><p><img src="/../Images/1743084062964-64fae296-a4b0-4bf2-9015-261ac8dcc4e1.png" srcset="/img/loading.gif" lazyload></p>
-<h1 id="Unlink"><a href="#Unlink" class="headerlink" title="Unlink"></a>Unlink</h1><p>thunk结构</p>
+<h1 id="Unlink"><a href="#Unlink" class="headerlink" title="Unlink"></a>Unlink</h1><h2 id="Fake-thunk"><a href="#Fake-thunk" class="headerlink" title="Fake_thunk"></a>Fake_thunk</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#AMD64下实现fake_thun</span><br>add(<span class="hljs-number">0x40</span>,<span class="hljs-string">b&#x27;aaaa&#x27;</span>)<br>add(<span class="hljs-number">0x80</span>,<span class="hljs-string">b&#x27;aaaa&#x27;</span>)<br><br>thunk_ptr = <span class="hljs-number">0x006020C0</span><br>fakefd = thunk_ptr - <span class="hljs-number">0x18</span><br>fakebk = thunk_ptr - <span class="hljs-number">0x10</span><br><br>fake_thunk = p(<span class="hljs-number">0</span>)<br>fake_thunk += p(<span class="hljs-number">0x41</span>)<br>fake_thunk += p(fakefd)<br>fake_thunk += p(fakebk)<br>fake_thunk += junk(<span class="hljs-number">0x20</span>)<br><br>fake_thunk += p(<span class="hljs-number">0x40</span>)<br>fake_thunk += p(<span class="hljs-number">0x90</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>thunk结构</p>
 <p><img src="/../Images/1743064752606-86f7b81c-44ab-460e-91c8-209d2df5e3f2-1750152657150-29.png" srcset="/img/loading.gif" lazyload></p>
 <p>Unlink： 将一个空闲的 chunk 从双向链表中移除，更新BK、FD的bk、fd（BK、FD都是一个thunk）</p>
 <p>简单来说将一个thunk从一个双向链表中删除，但是保证这个双向链表不被破坏</p>
