@@ -69,7 +69,7 @@
 <meta property="og:image" content="https://tforevery.github.io/Images/1750305287345-d4b0addb-2a46-4abb-ad33-922d4c5fd760.png">
 <meta property="og:image" content="https://tforevery.github.io/Images/1750305960566-00a2b71e-ab54-4820-b7c9-bbf636da2c22.png">
 <meta property="article:published_time" content="2025-06-17T09:21:15.000Z">
-<meta property="article:modified_time" content="2025-12-08T07:15:42.943Z">
+<meta property="article:modified_time" content="2025-12-11T06:36:50.613Z">
 <meta property="article:author" content="TY">
 <meta property="article:tag" content="HEAP">
 <meta name="twitter:card" content="summary_large_image">
@@ -279,7 +279,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.5k 字
+          4.1k 字
         
       </span>
     
@@ -290,7 +290,7 @@
         
         
         
-          30 分钟
+          35 分钟
         
       </span>
     
@@ -349,7 +349,7 @@
         aria-expanded="true"
       >
         PWN
-        <span class="list-group-count">(4)</span>
+        <span class="list-group-count">(5)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -390,6 +390,15 @@
     
       
       
+        <a href="/PWN-BUUCTF-3/" title="PWN-BUUCTF-3"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-3</span>
+        </a>
+      
+    
+      
+      
         <a href="/STACK/" title="STACK"
            class="list-group-item list-group-item-action
            ">
@@ -420,7 +429,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年12月8日 下午
+                    本文最后更新于 2025年12月11日 下午
                   
                 
               </p>
@@ -540,6 +549,10 @@
 <li>bk：指向上一个空闲的 chunk</li>
 </ul>
 <p>个人理解：<br>Unlink有点像连带责任，P走了，那么BK、FD就要必须更新新的信息</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs c">unlink(AV, P, BK, FD)                                                                                                       <br>    &#123;                                                                                                                               <br>        FD = P-&gt;fd;                                                                                                                 <br>        BK = P-&gt;bk;                                                                                                                 <br>        <span class="hljs-keyword">if</span> (__builtin_expect(FD-&gt;bk != P || BK-&gt;fd != P, <span class="hljs-number">0</span>))                                                                        <br>            malloc_printerr(check_action, <span class="hljs-string">&quot;corrupted double-linked list&quot;</span>, P, AV);                                                   <br>        <span class="hljs-keyword">else</span>                                                                                                                        <br>        &#123;                                                                                                                           <br>            FD-&gt;bk = BK;                                                                                                            <br>            BK-&gt;fd = FD;                                                                                                            <br>            <span class="hljs-keyword">if</span> (!in_smallbin_range(P-&gt;size) &amp;&amp; __builtin_expect(P-&gt;fd_nextsize != <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>))                                         <br>            &#123;                                                                                                                       <br>                <span class="hljs-keyword">if</span> (__builtin_expect(P-&gt;fd_nextsize-&gt;bk_nextsize != P, <span class="hljs-number">0</span>) || __builtin_expect(P-&gt;bk_nextsize-&gt;fd_nextsize != P, <span class="hljs-number">0</span>)) <br>                    malloc_printerr(check_action,                                                                                   <br>                                    <span class="hljs-string">&quot;corrupted double-linked list (not small)&quot;</span>,                                                     <br>                                    P, AV);                                                                                         <br>                <span class="hljs-keyword">if</span> (FD-&gt;fd_nextsize == <span class="hljs-literal">NULL</span>)                                                                                        <br>                &#123;                                                                                                                   <br>                    <span class="hljs-keyword">if</span> (P-&gt;fd_nextsize == P)                                                                                        <br>                        FD-&gt;fd_nextsize = FD-&gt;bk_nextsize = FD;                                                                     <br>                    <span class="hljs-keyword">else</span>                                                                                                            <br>                    &#123;                                                                                                               <br>                        FD-&gt;fd_nextsize = P-&gt;fd_nextsize;                                                                           <br>                        FD-&gt;bk_nextsize = P-&gt;bk_nextsize;                                                                           <br>                        P-&gt;fd_nextsize-&gt;bk_nextsize = FD;                                                                           <br>                        P-&gt;bk_nextsize-&gt;fd_nextsize = FD;                                                                           <br>                    &#125;                                                                                                               <br>                &#125;                                                                                                                   <br>                <span class="hljs-keyword">else</span>                                                                                                                <br>                &#123;                                                                                                                   <br>                    P-&gt;fd_nextsize-&gt;bk_nextsize = P-&gt;bk_nextsize;                                                                   <br>                    P-&gt;bk_nextsize-&gt;fd_nextsize = P-&gt;fd_nextsize;                                                                   <br>                &#125;                                                                                                                   <br>            &#125;                                                                                                                       <br>        &#125;                                                                                                                           <br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
+
 <h2 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h2><h3 id="1-原先的双向链表"><a href="#1-原先的双向链表" class="headerlink" title="1. 原先的双向链表"></a>1. 原先的双向链表</h3><p><img src="/../Images/1750085222497-cb92602d-7946-4eae-a5dc-d439b1038389.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="2-Unlink后的双向链表（Unlink-P-）"><a href="#2-Unlink后的双向链表（Unlink-P-）" class="headerlink" title="2. Unlink后的双向链表（Unlink(P)）"></a>2. Unlink后的双向链表（Unlink(P)）</h3><p>也就说<code>Unlink(P)</code></p>
 <ul>
@@ -613,24 +626,54 @@
 <p><img src="/../Images/1750133461998-e1939518-e471-44ae-b1d8-c67734f0c244.png" srcset="/img/loading.gif" lazyload></p>
 <p>但是一般来说都是只知道P地址的存储地址，那么我们来转换一下</p>
 <p><img src="/../Images/1750133652417-3792d8ab-574d-4ade-98ed-abc6cfb0f26a.png" srcset="/img/loading.gif" lazyload></p>
-<p>这样的结果是P_ptr被覆盖成了P-&gt;fd &#x3D;&#x3D; P_Addr-3，至于为什么不是P_Addr-2，我也不造了，个人猜测是P-&gt;bk先覆盖了，P-&gt;fd后覆盖</p>
+<p>这样的结果是P_ptr被覆盖成了P-&gt;fd &#x3D;&#x3D; P_Addr-3，至于为什么不是P_Addr-2</p>
+<p>看源码我们能知道代码执行的先后顺序</p>
+<ol>
+<li><code>FD-&gt;bk = BK</code></li>
+<li><code>BK-&gt;fd = FD</code></li>
+</ol>
 <h2 id="触发"><a href="#触发" class="headerlink" title="触发"></a>触发</h2><h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><ol>
 <li><p>伪造thunk（fake_thunk），</p>
 </li>
 <li><p>修改fake_thunk所在thunk的下一个thunk（这里叫next_thunk）的<code>prev_size</code>、<code>size上的 P flag(通常默认是1)</code>，通过next_thunk的修改来设置fake_thunk的状态是<code>free</code></p>
-</li>
-<li><p>prev_size &#x3D; fake_thunk-&gt;size(不包含P，即P&#x3D;0)</p>
-</li>
-<li><p>size &#x3D; size-1 (如果size的个位上存在1)</p>
+<ul>
+<li>prev_size &#x3D; fake_thunk-&gt;size(不包含P，即P&#x3D;0)</li>
+<li>size &#x3D; size-1 (如果size的个位上存在1)</li>
+</ul>
 </li>
 </ol>
+<blockquote>
 <p>next_thunk的size有要求，必须&gt;&#x3D; 90，即malloc(0x80)[amd64下]</p>
 <p>不然回收的时候（free(next_thunk)）会将next_thunk收到fastbin中，导致触发不了Unlink</p>
-<ol>
+</blockquote>
+<ol start="3">
 <li>free(next_thunk)：触发Unlink(P)</li>
 </ol>
-<p>解释下<br><code>size上的P flag</code>：PREV_INUSE，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
+<blockquote>
+<p> 解释下<br><code>size上的P flag</code>：PREV_INUSE，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
 <p><code>prev_size</code>：若前一个物理相邻的chunk是free chunk，则表示其大小。否则用于存储前一个chunk的数据</p>
+</blockquote>
+<ol start="4">
+<li>为什么free(next_thunk)会触发Unlink(P)呢？</li>
+</ol>
+<p>首先我要知道在free(next_thunk)下发生了什么</p>
+<pre><code class="hljs">1. next_thunk-&gt; size = 0x91 (默认malloc(0x80)下)，不属于fastbin，归于unsortedbin中
+</code></pre>
+<p>当thunk属于unsortedbin有个特点：如果当前thunk（now_thunk）前的thunk（prev_thunk）属于空闲（now_thunk-&gt;prev_size &#x3D; prev_thunk-&gt;size(该size不包含P位)），则会向后合并，即prev_thunk和now_thunk合并，新的thunk位prev_thunk的地址</p>
+<pre><code class="hljs">2. 调用free的时候发生了什么，我们来看一下源码（glibc-2.23_./malloc/malloc.c）
+</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> __libc_free(<span class="hljs-type">void</span> *mem)<br>&#123;<br>    mstate ar_ptr;<br>    mchunkptr p; <span class="hljs-comment">/* chunk corresponding to mem */</span><br><br>    <span class="hljs-type">void</span> (*hook)(<span class="hljs-type">void</span> *, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *) = atomic_forced_read(__free_hook);<br>    <span class="hljs-keyword">if</span> (__builtin_expect(hook != <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>))<br>    &#123;<br>        (*hook)(mem, RETURN_ADDRESS(<span class="hljs-number">0</span>));<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (mem == <span class="hljs-number">0</span>) <span class="hljs-comment">/* free(0) has no effect */</span><br>        <span class="hljs-keyword">return</span>;<br><br>    p = mem2chunk(mem);<br><br>    <span class="hljs-keyword">if</span> (chunk_is_mmapped(p)) <span class="hljs-comment">/* release mmapped memory. */</span><br>    &#123;<br>        <span class="hljs-comment">/* see if the dynamic brk/mmap threshold needs adjusting */</span><br>        <span class="hljs-keyword">if</span> (!mp_.no_dyn_threshold &amp;&amp; p-&gt;size &gt; mp_.mmap_threshold &amp;&amp; p-&gt;size &lt;= DEFAULT_MMAP_THRESHOLD_MAX)<br>        &#123;<br>            mp_.mmap_threshold = chunksize(p);<br>            mp_.trim_threshold = <span class="hljs-number">2</span> * mp_.mmap_threshold;<br>            LIBC_PROBE(memory_mallopt_free_dyn_thresholds, <span class="hljs-number">2</span>,<br>                       mp_.mmap_threshold, mp_.trim_threshold);<br>        &#125;<br>        munmap_chunk(p);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    ar_ptr = arena_for_chunk(p);<br>    _int_free(ar_ptr, p, <span class="hljs-number">0</span>);<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//在_int_free的定义里有这么一段代码,分别记录向后合并和向前合并的过程</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PREV_INUSE 0x1</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> prev_inuse(p)       ((p)-&gt;size &amp; PREV_INUSE)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> chunk_at_offset(p, s)  ((mchunkptr) (((char *) (p)) + (s)))</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> clear_inuse_bit_at_offset(p, s)					      \</span><br><span class="hljs-meta">  (((mchunkptr) (((char *) (p)) + (s)))-&gt;size &amp;= ~(PREV_INUSE))</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">检查P（被free的thunk）的前一个thunk（物理相邻低地址thunk：prev_thunk）是否正在被使用</span><br><span class="hljs-comment">实现合并</span><br><span class="hljs-comment">    获取prev_thunk-&gt;size</span><br><span class="hljs-comment">    两个thunk大小相加</span><br><span class="hljs-comment">    更新P为prev_thunk</span><br><span class="hljs-comment">    调用Unlink</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">if</span> (!prev_inuse(p))<br>&#123;<br>    prevsize = p-&gt;prev_size;<br>    size += prevsize;<br>    p = chunk_at_offset(p, -((<span class="hljs-type">long</span>)prevsize));<br>    unlink(av, p, bck, fwd);<br>&#125;<br><br><span class="hljs-keyword">if</span> (nextchunk != av-&gt;top)<br>&#123;<br>    <span class="hljs-comment">/* get and clear inuse bit */</span><br>    nextinuse = inuse_bit_at_offset(nextchunk, nextsize);<br><br>    <span class="hljs-comment">/* consolidate forward */</span><br>    <span class="hljs-keyword">if</span> (!nextinuse)<br>    &#123;<br>        unlink(av, nextchunk, bck, fwd);<br>        size += nextsize;<br>    &#125;<span class="hljs-keyword">else</span><br>        clear_inuse_bit_at_offset(nextchunk, <span class="hljs-number">0</span>);<br><span class="hljs-comment">//.........</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>整理一下思路</p>
+<ul>
+<li>在调用free的时候会先后检查prev_thunk；next_thunk是否在被使用</li>
+<li>如果不被使用 &amp;&amp; next_thunk !&#x3D; top_thunk；那么尝试调用Unlink</li>
+</ul>
+<p>当然这是要满足非fastbin等情况下才会进入上诉两个过程</p>
+</blockquote>
 <h2 id="例题-2"><a href="#例题-2" class="headerlink" title="例题"></a>例题</h2><h3 id="ctfshowpwn143"><a href="#ctfshowpwn143" class="headerlink" title="ctfshowpwn143"></a>ctfshowpwn143</h3><p>add函数，可以看出它的布局</p>
 <p><img src="/../Images/1750083538368-94f978b3-f22a-44da-b808-f044409a05e7.png" srcset="/img/loading.gif" lazyload></p>
 <p><img src="/../Images/1750083781947-ad488819-d15b-4dbb-ad8d-c4cdce393181.png" srcset="/img/loading.gif" lazyload></p>
