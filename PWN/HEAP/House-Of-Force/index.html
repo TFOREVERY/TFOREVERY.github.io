@@ -1,0 +1,1075 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="TY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Knowledge points of HEAP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="House Of Force">
+<meta property="og:url" content="https://tforevery.github.io/PWN/HEAP/House-Of-Force/index.html">
+<meta property="og:site_name" content="TY&#39;s Blog">
+<meta property="og:description" content="Knowledge points of HEAP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tforevery.github.io/Images/1765780443604-932d9885-7b1e-4565-a1d0-2ea4960ed9df.png">
+<meta property="og:image" content="https://tforevery.github.io/Images/1765780536452-03d048e1-f7eb-4b75-87ab-7ca1f32464d0.png">
+<meta property="article:published_time" content="2025-12-23T16:55:07.000Z">
+<meta property="article:modified_time" content="2025-12-23T17:11:16.444Z">
+<meta property="article:author" content="TY">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tforevery.github.io/Images/1765780443604-932d9885-7b1e-4565-a1d0-2ea4960ed9df.png">
+  
+  
+  
+  <title>House Of Force - TY&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tforevery.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"4pk0DV0Gzc6TMpnuyhQwgcgs-gzGzoHsz","app_key":"4MnQ5z5ovVgFNdAOxLy5UlVV","server_url":"https://4pk0dv0g.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>TY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="House Of Force"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-24 00:55" pubdate>
+          2025年12月24日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          613 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          6 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="PWN"
+        id="heading-9ff4c26c1ae7cc7c11352087a2fa7ed2" role="tab" data-toggle="collapse" href="#collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
+        aria-expanded="true"
+      >
+        PWN
+        <span class="list-group-count">(12)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
+           role="tabpanel" aria-labelledby="heading-9ff4c26c1ae7cc7c11352087a2fa7ed2">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="BUUCTF"
+        id="heading-20cbba83d944fc64ea203deb4df2127a" role="tab" data-toggle="collapse" href="#collapse-20cbba83d944fc64ea203deb4df2127a"
+        aria-expanded="false"
+      >
+        BUUCTF
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-20cbba83d944fc64ea203deb4df2127a"
+           role="tabpanel" aria-labelledby="heading-20cbba83d944fc64ea203deb4df2127a">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-1/" title="PWN-BUUCTF-1"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-1</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-2/" title="PWN-BUUCTF-2"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-2</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-3/" title="PWN-BUUCTF-3"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-3</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-4/" title="PWN-BUUCTF-4"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-4</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="HEAP"
+        id="heading-b6722804f5872cdd88347da194d42087" role="tab" data-toggle="collapse" href="#collapse-b6722804f5872cdd88347da194d42087"
+        aria-expanded="true"
+      >
+        HEAP
+        <span class="list-group-count">(7)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b6722804f5872cdd88347da194d42087"
+           role="tabpanel" aria-labelledby="heading-b6722804f5872cdd88347da194d42087">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/HEAP/Heap-block-overlap/" title="Heap block overlap"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Heap block overlap</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/House-Of-Force/" title="House Of Force"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">House Of Force</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/House-Of-Spirit/" title="House Of Spirit"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">House Of Spirit</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Off-By-One/" title="Off By One"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Off By One</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/UAF/" title="UAF"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">UAF</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Unlink/" title="Unlink"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Unlink</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Unsorted-bin-Attack/" title="Unsorted bin Attack"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Unsorted bin Attack</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="STACK"
+        id="heading-0fac686d86aba414411b58f6bce53a76" role="tab" data-toggle="collapse" href="#collapse-0fac686d86aba414411b58f6bce53a76"
+        aria-expanded="false"
+      >
+        STACK
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-0fac686d86aba414411b58f6bce53a76"
+           role="tabpanel" aria-labelledby="heading-0fac686d86aba414411b58f6bce53a76">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/STACK/Stack-pivoting/" title="Stack pivoting"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Stack pivoting</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">House Of Force</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2025年12月24日 凌晨
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/introduction/">CTF-WIKI</a></p>
+<h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><h2 id="malloc请求大小与实际大小"><a href="#malloc请求大小与实际大小" class="headerlink" title="malloc请求大小与实际大小"></a>malloc请求大小与实际大小</h2><ol>
+<li>请求大小我们用<code>req</code>来标识</li>
+<li>实际大小我们用<code>nb</code>来标识</li>
+<li>malloc(req)后req会转为无符号型整数<ul>
+<li>void *__libc_malloc(size_t bytes)</li>
+</ul>
+</li>
+<li>请求大小与实际大小的转换<ul>
+<li>REQUEST_OUT_OF_RANGE(req)越界检查</li>
+<li>request2size(req)实现转换</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment">   Check if a request is so large that it would wrap around zero when</span><br><span class="hljs-comment">   padded and aligned. To simplify some other code, the bound is made</span><br><span class="hljs-comment">   low enough so that adding MINSIZE will also not wrap around zero.</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> REQUEST_OUT_OF_RANGE(req)                                              \</span><br><span class="hljs-meta">    ((unsigned long) (req) &gt;= (unsigned long) (INTERNAL_SIZE_T)(-2 * MINSIZE))</span><br><span class="hljs-comment">/* pad request bytes into a usable size -- internal version */</span><br><span class="hljs-comment">//MALLOC_ALIGN_MASK = 2 * SIZE_SZ -1</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> request2size(req)                                                      \</span><br><span class="hljs-meta">    (((req) + SIZE_SZ + MALLOC_ALIGN_MASK &lt; MINSIZE)                           \</span><br><span class="hljs-meta">         ? MINSIZE                                                             \</span><br><span class="hljs-meta">         : ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) &amp; ~MALLOC_ALIGN_MASK)</span><br><br><span class="hljs-comment">/*  Same, except also perform argument check */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> checked_request2size(req, sz)                                          \</span><br><span class="hljs-meta">    <span class="hljs-keyword">if</span> (REQUEST_OUT_OF_RANGE(req)) &#123;                                           \</span><br><span class="hljs-meta">        __set_errno(ENOMEM);                                                   \</span><br><span class="hljs-meta">        return 0;                                                              \</span><br><span class="hljs-meta">    &#125;                                                                          \</span><br><span class="hljs-meta">    (sz) = request2size(req);</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="REQUEST-OUT-OF-RANGE-req-越界检查"><a href="#REQUEST-OUT-OF-RANGE-req-越界检查" class="headerlink" title="REQUEST_OUT_OF_RANGE(req)越界检查"></a>REQUEST_OUT_OF_RANGE(req)越界检查</h2><blockquote>
+<p>越界检查很好理解，就是我们<code>req</code>的大小不能大于<code>(unsigned long) (INTERNAL_SIZE_T)(-2 * MINSIZE)</code></p>
+<p>(unsigned long) (INTERNAL_SIZE_T)(-2 * MINSIZE)</p>
+<ul>
+<li>x86_32：MINSIZE &#x3D; 0x10 所以边界为 0xffffffe0</li>
+<li>x86_64：MINSIZE &#x3D; 0x20 所以边界为 0xffffffffffffffc0</li>
+</ul>
+<p>也就是说我们的req要小于边界大小即可</p>
+</blockquote>
+<h2 id="request2size-req-实现转换"><a href="#request2size-req-实现转换" class="headerlink" title="request2size(req)实现转换"></a>request2size(req)实现转换</h2><h3 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h3><ul>
+<li>MINSIZE：最小堆的大小<ul>
+<li>prev_size</li>
+<li>size</li>
+<li>fd</li>
+<li>bk</li>
+</ul>
+</li>
+<li>MALLOC_ALIGN_MASK：用来对齐的<code>x86_64下对齐0x10</code> <code>x86_32下对齐0x8</code>，也可以称为<code>对齐冗余</code></li>
+<li>SIZE_SZ：size字段的大小<ul>
+<li>为什么没有prev_size呢，因为在实际chunk中prev_size是归属于物理相邻的低地址thunk的</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//MALLOC_ALIGN_MASK = 2 * SIZE_SZ -1</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> request2size(req)                                                      \</span><br><span class="hljs-meta">    (((req) + SIZE_SZ + MALLOC_ALIGN_MASK &lt; MINSIZE)                           \</span><br><span class="hljs-meta">         ? MINSIZE                                                             \</span><br><span class="hljs-meta">         : ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) &amp; ~MALLOC_ALIGN_MASK)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="转换流程"><a href="#转换流程" class="headerlink" title="转换流程"></a>转换流程</h3><ol>
+<li>malloc(req)</li>
+<li>nb &#x3D; MINSIZE : ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) &amp; ~MALLOC_ALIGN_MASK)</li>
+</ol>
+<blockquote>
+<p>举个例子[x86_64]</p>
+<p>正数</p>
+<p>req &#x3D; 0x10</p>
+<p>(req) + SIZE_SZ + MALLOC_ALIGN_MASK &#x3D; 0x27 &gt; MINSIZE</p>
+<p>那么nb &#x3D; 0x20 [((req) + SIZE_SZ + MALLOC_ALIGN_MASK) &amp; ~MALLOC_ALIGN_MASK)]</p>
+<p>负数</p>
+<p>req &#x3D; -0x10</p>
+<p>-0x10 &gt; -0x40[-2 * MINSIZE]  –&gt; 拒绝申请</p>
+<p>req &#x3D; -0x60 &#x3D;&#x3D; 0xffffffffffffffa0</p>
+<p>-0x60 &lt; -0x40[-2 * MINSIZE]</p>
+<p>(req) + SIZE_SZ + MALLOC_ALIGN_MASK &#x3D; 0xffffffffffffffb7 &gt; MINSIZE</p>
+<p>nb &#x3D; 0xffffffffffffffb0 [((req) + SIZE_SZ + MALLOC_ALIGN_MASK) &amp; ~MALLOC_ALIGN_MASK)]</p>
+</blockquote>
+<p>可以看到req和nb之间的差别在于SIZE_SZ + 对齐</p>
+<p>那么我们要求<code>req == nb</code>呢（这个很重要，关乎于我们控制top_thunk）</p>
+<p>只要提前 <code>- (SIZE_SZ + MALLOC_ALIGN_MASK)</code>，并保证对齐即可</p>
+<h3 id="malloc-req-与top-thunk"><a href="#malloc-req-与top-thunk" class="headerlink" title="malloc(req)与top_thunk"></a>malloc(req)与top_thunk</h3><p>给出场景<code>top_thunk = 0x3955020</code></p>
+<p><img src="/../../../Images/1765780443604-932d9885-7b1e-4565-a1d0-2ea4960ed9df.png" srcset="/img/loading.gif" lazyload></p>
+<p>req &#x3D; 0x10[Add(0x10)]；nb &#x3D; 0x20</p>
+<p>top_thunk &#x3D; 0x3955040 </p>
+<p>0x3955040 - 0x3955020 &#x3D; 0x20 &#x3D;&#x3D; nb</p>
+<p><img src="/../../../Images/1765780536452-03d048e1-f7eb-4b75-87ab-7ca1f32464d0.png" srcset="/img/loading.gif" lazyload></p>
+<p>那么也就是说当我们<code>malloc(req)</code>的时候<code>top_thunk -= nb</code></p>
+<h1 id="Exploit条件"><a href="#Exploit条件" class="headerlink" title="Exploit条件"></a>Exploit条件</h1><ol>
+<li><font style="color:rgba(0, 0, 0, 0.87);">能够以溢出等方式控制到 top chunk 的 size 域</font></li>
+<li><font style="color:rgba(0, 0, 0, 0.87);">能够自由地控制堆分配尺寸的大小</font></li>
+</ol>
+<blockquote>
+<p><font style="color:rgba(0, 0, 0, 0.87);">top_thunk的地址存放在main_arena+0x58(88)上，也就是我们Unsorted bin leak出来的地址</font></p>
+</blockquote>
+<h2 id="无Top-thunk"><a href="#无Top-thunk" class="headerlink" title="无Top thunk"></a><font style="color:rgba(0, 0, 0, 0.87);">无Top thunk</font></h2><blockquote>
+<p>通过req来控制我们<font style="color:rgba(0, 0, 0, 0.87);">Top thunk的位置</font></p>
+<ul>
+<li>malloc(req)</li>
+<li>nb &#x3D; request2size(req)：依据需求对req进行手动转换nb，避免更新Top thunk地址错误</li>
+<li>Top thunk -&#x3D; nb</li>
+</ul>
+<p><font style="color:rgba(0, 0, 0, 0.87);">局限</font></p>
+<ul>
+<li>Top thunk的地址不可控</li>
+</ul>
+</blockquote>
+<h2 id="知晓Top-Thunk"><a href="#知晓Top-Thunk" class="headerlink" title="知晓Top Thunk"></a>知晓Top Thunk</h2><blockquote>
+<p>通过计算Top thunk与目标地址（Tag_Address）, 实现在目的地址附近创建堆块</p>
+<ul>
+<li><p>offset &#x3D; Tag_Address - Top thunk - (SIZE_SZ * 2)</p>
+<ul>
+<li>(SIZE_SZ * 2) ： 预留<code>prev_size</code> <code>size</code></li>
+</ul>
+</li>
+<li><p>malloc(offset)：依据需求对offset进行手动转换nb，避免更新Top thunk地址错误</p>
+<ul>
+<li>注意<code>size</code>域会被更新</li>
+</ul>
+</li>
+<li><p>malloc(req)：获取Tag_Address堆块</p>
+</li>
+</ul>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/PWN/" class="category-chain-item">PWN</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/PWN/HEAP/" class="category-chain-item">HEAP</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>House Of Force</div>
+      <div>https://tforevery.github.io/PWN/HEAP/House-Of-Force/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年12月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/PWN/HEAP/House-Of-Spirit/" title="House Of Spirit">
+                        <span class="hidden-mobile">House Of Spirit</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"4pk0DV0Gzc6TMpnuyhQwgcgs-gzGzoHsz","appKey":"4MnQ5z5ovVgFNdAOxLy5UlVV","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Virtuall</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

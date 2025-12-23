@@ -19,21 +19,33 @@
   <meta name="author" content="TY">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="https://tforevery.github.io/categories/index.html">
+    <meta name="description" content="Knowledge points of HEAP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Heap block overlap">
+<meta property="og:url" content="https://tforevery.github.io/PWN/HEAP/Heap-block-overlap/index.html">
 <meta property="og:site_name" content="TY&#39;s Blog">
+<meta property="og:description" content="Knowledge points of HEAP">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tforevery.github.io/Images/1743064752606-86f7b81c-44ab-460e-91c8-209d2df5e3f2.png">
+<meta property="article:published_time" content="2025-12-23T16:45:12.000Z">
+<meta property="article:modified_time" content="2025-12-23T17:11:01.000Z">
 <meta property="article:author" content="TY">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tforevery.github.io/Images/1743064752606-86f7b81c-44ab-460e-91c8-209d2df5e3f2.png">
   
   
   
-  <title>分类 - TY&#39;s Blog</title>
+  <title>Heap block overlap - TY&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
 
@@ -96,7 +108,7 @@
   <header>
     
 
-<div class="header-inner" style="height: 60vh;">
+<div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -202,9 +214,58 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="分类"></span>
+            <span id="subtitle" data-typed-text="Heap block overlap"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-24 00:45" pubdate>
+          2025年12月24日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          98 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          1 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
 
         
       </div>
@@ -220,14 +281,14 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
 
 
 
@@ -240,100 +301,17 @@
     
     
     <div class="category row nomargin-x">
-      <a class="category-item collapsed
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Environment"
-        id="heading-0ba29c6a1afacf586b03a26162c72274" role="tab" data-toggle="collapse" href="#collapse-0ba29c6a1afacf586b03a26162c72274"
-        aria-expanded="false"
-      >
-        Environment
-        <span class="list-group-count"></span>
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      
-        <a href="/categories/Environment/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>1</span>
-        </a>
-      
-      <div class="category-collapse collapse " id="collapse-0ba29c6a1afacf586b03a26162c72274"
-           role="tabpanel" aria-labelledby="heading-0ba29c6a1afacf586b03a26162c72274">
-        
-        
-          
-          
-  <div class="category-post-list">
-    
-    
-  </div>
-
-          
-  
-    
-    
-    
-    <div class="category-sub row nomargin-x">
-      <a class="category-subitem collapsed
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Hexo"
-        id="heading-c00d1eb68b529768ba98c975c76a9b66" role="tab" data-toggle="collapse" href="#collapse-c00d1eb68b529768ba98c975c76a9b66"
-        aria-expanded="false"
-      >
-        Hexo
-        <span class="list-group-count"></span>
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      
-        <a href="/categories/Environment/Hexo/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>1</span>
-        </a>
-      
-      <div class="category-collapse collapse " id="collapse-c00d1eb68b529768ba98c975c76a9b66"
-           role="tabpanel" aria-labelledby="heading-c00d1eb68b529768ba98c975c76a9b66">
-        
-        
-          
-  <div class="category-post-list">
-    
-    
-      
-      
-        <a href="/Environment/Blog-building/" title="Blog-building"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">Blog-building</span>
-        </a>
-      
-    
-  </div>
-
-        
-      </div>
-    </div>
-  
-        
-      </div>
-    </div>
-  
-    
-    
-    
-    <div class="category row nomargin-x">
-      <a class="category-item collapsed
+      <a class="category-item 
           list-group-item category-item-action col-10 col-md-11 col-xm-11" title="PWN"
         id="heading-9ff4c26c1ae7cc7c11352087a2fa7ed2" role="tab" data-toggle="collapse" href="#collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
-        aria-expanded="false"
+        aria-expanded="true"
       >
         PWN
-        <span class="list-group-count"></span>
+        <span class="list-group-count">(12)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-        <a href="/categories/PWN/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>12</span>
-        </a>
-      
-      <div class="category-collapse collapse " id="collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
+      <div class="category-collapse collapse show" id="collapse-9ff4c26c1ae7cc7c11352087a2fa7ed2"
            role="tabpanel" aria-labelledby="heading-9ff4c26c1ae7cc7c11352087a2fa7ed2">
         
         
@@ -356,14 +334,9 @@
         aria-expanded="false"
       >
         BUUCTF
-        <span class="list-group-count"></span>
+        <span class="list-group-count">(4)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
-      
-        <a href="/categories/PWN/BUUCTF/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>4</span>
-        </a>
       
       <div class="category-collapse collapse " id="collapse-20cbba83d944fc64ea203deb4df2127a"
            role="tabpanel" aria-labelledby="heading-20cbba83d944fc64ea203deb4df2127a">
@@ -419,22 +392,17 @@
     
     
     <div class="category-sub row nomargin-x">
-      <a class="category-subitem collapsed
+      <a class="category-subitem 
           list-group-item category-item-action col-10 col-md-11 col-xm-11" title="HEAP"
         id="heading-b6722804f5872cdd88347da194d42087" role="tab" data-toggle="collapse" href="#collapse-b6722804f5872cdd88347da194d42087"
-        aria-expanded="false"
+        aria-expanded="true"
       >
         HEAP
-        <span class="list-group-count"></span>
+        <span class="list-group-count">(7)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-        <a href="/categories/PWN/HEAP/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>7</span>
-        </a>
-      
-      <div class="category-collapse collapse " id="collapse-b6722804f5872cdd88347da194d42087"
+      <div class="category-collapse collapse show" id="collapse-b6722804f5872cdd88347da194d42087"
            role="tabpanel" aria-labelledby="heading-b6722804f5872cdd88347da194d42087">
         
         
@@ -446,7 +414,7 @@
       
         <a href="/PWN/HEAP/Heap-block-overlap/" title="Heap block overlap"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">Heap block overlap</span>
         </a>
       
@@ -521,14 +489,9 @@
         aria-expanded="false"
       >
         STACK
-        <span class="list-group-count"></span>
+        <span class="list-group-count">(1)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
-      
-        <a href="/categories/PWN/STACK/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>1</span>
-        </a>
       
       <div class="category-collapse collapse " id="collapse-0fac686d86aba414411b58f6bce53a76"
            role="tabpanel" aria-labelledby="heading-0fac686d86aba414411b58f6bce53a76">
@@ -557,101 +520,242 @@
       </div>
     </div>
   
-    
-    
-    
-    <div class="category row nomargin-x">
-      <a class="category-item collapsed
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Reverse"
-        id="heading-67f115c1fddc4ce1aeb1c754001585bc" role="tab" data-toggle="collapse" href="#collapse-67f115c1fddc4ce1aeb1c754001585bc"
-        aria-expanded="false"
-      >
-        Reverse
-        <span class="list-group-count"></span>
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      
-        <a href="/categories/Reverse/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>2</span>
-        </a>
-      
-      <div class="category-collapse collapse " id="collapse-67f115c1fddc4ce1aeb1c754001585bc"
-           role="tabpanel" aria-labelledby="heading-67f115c1fddc4ce1aeb1c754001585bc">
-        
-        
-          
-          
-  <div class="category-post-list">
-    
-    
-  </div>
+</div>
 
-          
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Heap block overlap</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2025年12月24日 凌晨
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/introduction/">CTF-WIKI</a></p>
+<h1 id="chunk的结构（堆）"><a href="#chunk的结构（堆）" class="headerlink" title="chunk的结构（堆）"></a>chunk的结构（堆）</h1><p><strong>prev_size</strong>:若前一个物理相邻的chunk是free chunk，则表示其大小。否则用于存储前一个chunk的数据</p>
+<p><img src="/../../../Images/1743064752606-86f7b81c-44ab-460e-91c8-209d2df5e3f2.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>x8664下prev_size 和 size+A+M+P 各自占8个字节</li>
+<li>i386下prev_size 和 size+A+M+P 各自占4个字节</li>
+</ul>
+<ol>
+<li>chunk的起始大小为：Initial_size &#x3D; prev_size + （size+A+M+P） &#x3D;&#x3D; 0x10 (x64)&#x2F;0x8(x32)</li>
+<li>chunk的最小大小为<ul>
+<li>(x64)：0x20 (0x21) [Initial_size+0x10]</li>
+<li>(x32)：0x10 (0x11) [Initial_size+0x8]</li>
+</ul>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
   
     
-    
-    
-    <div class="category-sub row nomargin-x">
-      <a class="category-subitem collapsed
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="BUUCTF"
-        id="heading-20cbba83d944fc64ea203deb4df2127a" role="tab" data-toggle="collapse" href="#collapse-20cbba83d944fc64ea203deb4df2127a"
-        aria-expanded="false"
-      >
-        BUUCTF
-        <span class="list-group-count"></span>
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      
-        <a href="/categories/Reverse/BUUCTF/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>2</span>
-        </a>
-      
-      <div class="category-collapse collapse " id="collapse-20cbba83d944fc64ea203deb4df2127a"
-           role="tabpanel" aria-labelledby="heading-20cbba83d944fc64ea203deb4df2127a">
+      <span class="category-chain">
         
-        
-          
-  <div class="category-post-list">
+  <a href="/categories/PWN/" class="category-chain-item">PWN</a>
+  
+  
+    <span>></span>
     
-    
-      
-      
-        <a href="/REVERSE/BUUCTF/Reverse-BUUCTF-1/" title="Reverse-BUUCTF-1"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">Reverse-BUUCTF-1</span>
-        </a>
-      
-    
-      
-      
-        <a href="/REVERSE/BUUCTF/Reverse-BUUCTF-2/" title="Reverse-BUUCTF-2"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">Reverse-BUUCTF-2</span>
-        </a>
-      
-    
-  </div>
+  <a href="/categories/PWN/HEAP/" class="category-chain-item">HEAP</a>
+  
+  
 
-        
-      </div>
+  
+
+      </span>
+    
+  
+</span>
+
     </div>
   
-        
-      </div>
-    </div>
   
 </div>
 
 
-              </div>
-            </div>
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Heap block overlap</div>
+      <div>https://tforevery.github.io/PWN/HEAP/Heap-block-overlap/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TY</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年12月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
           </div>
         </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/PWN/HEAP/Off-By-One/" title="Off By One">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Off By One</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/PWN/HEAP/UAF/" title="UAF">
+                        <span class="hidden-mobile">UAF</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"4pk0DV0Gzc6TMpnuyhQwgcgs-gzGzoHsz","appKey":"4MnQ5z5ovVgFNdAOxLy5UlVV","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
       </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
     
 
     
@@ -770,6 +874,99 @@
 
 
 
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script defer src="/js/leancloud.js" ></script>
 
