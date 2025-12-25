@@ -8,7 +8,7 @@
     <link href="/PWN/HEAP/Tcache-attack/"/>
     <url>/PWN/HEAP/Tcache-attack/</url>
     
-    <content type="html"><![CDATA[<h1 id="Tcache-dup"><a href="#Tcache-dup" class="headerlink" title="Tcache dup"></a>Tcache dup</h1><blockquote><p>简单来说</p><p>通过两次连续的<code>free(&amp;(thunk-&gt;fd))</code>，使得<code>thunk-&gt;fd = &amp;(thunck-&gt;fd)</code>,这时候如果能够修改<code>thunck-&gt;fd</code>的内容，就可以实现任意内存申请</p></blockquote><blockquote><p>Q-A</p><p>Q：为什么要double free？free一次，修改thunk-&gt;fd不也能修改链表吗</p><p>A：在没有Edit功能的时候，通常只会在Add功能里能够修改thunk-&gt;fd，但是如果我把bins里唯一一个申请走了，修改将无效。</p></blockquote><p><img src="/./../../../Images/1766586316002-988e7544-0a4c-4ad0-ab30-e710b99001a5.webp"></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="Tcache-dup"><a href="#Tcache-dup" class="headerlink" title="Tcache dup"></a>Tcache dup</h1><blockquote><p>在<code>2.27-3ubuntu1_amd64</code>并没有对dup进行检测，可以直接实现dup</p></blockquote><blockquote><p>简单来说</p><p>通过两次连续的<code>free(&amp;(thunk-&gt;fd))</code>，使得<code>thunk-&gt;fd = &amp;(thunck)</code>,这时候如果能够修改<code>thunck-&gt;fd</code>的内容，就可以实现任意内存申请</p><p>这里注意一个问题：实现下述语句的条件</p><p>thunk-&gt;fd &#x3D; &amp;(thunck)</p><p>是在tcache bins里只有thunk它本身，即tcache bins : thunk</p><p>如果说tcache bins里有其他的thunk如下：</p><p>tcache bins : thunk0 -&gt; thunk1</p><p>那么两次连续的<code>free(&amp;(thunk-&gt;fd))</code>（dup）得到的是<code>thunk-&gt;fd = &amp;(thunck0)</code>，也就是当前tcache bins的头链</p></blockquote><blockquote><p>Q-A</p><p>Q：为什么要double free？free一次，修改thunk-&gt;fd不也能修改链表吗</p><p>A：在没有Edit功能的时候，通常只会在Add功能里能够修改thunk-&gt;fd，但是如果我把bins里唯一一个申请走了，修改将无效。</p></blockquote><p><img src="/./../../../Images/1766586316002-988e7544-0a4c-4ad0-ab30-e710b99001a5.webp"></p>]]></content>
     
     
     <categories>
