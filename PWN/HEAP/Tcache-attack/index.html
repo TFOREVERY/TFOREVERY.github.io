@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://tforevery.github.io/Images/1766586316002-988e7544-0a4c-4ad0-ab30-e710b99001a5.webp">
 <meta property="article:published_time" content="2025-12-24T12:16:12.000Z">
-<meta property="article:modified_time" content="2025-12-25T14:26:52.140Z">
+<meta property="article:modified_time" content="2025-12-29T16:25:19.555Z">
 <meta property="article:author" content="TY">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://tforevery.github.io/Images/1766586316002-988e7544-0a4c-4ad0-ab30-e710b99001a5.webp">
@@ -237,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          219 字
+          236 字
         
       </span>
     
@@ -546,7 +546,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年12月25日 晚上
+                    本文最后更新于 2025年12月30日 凌晨
                   
                 
               </p>
@@ -561,18 +561,18 @@
 <blockquote>
 <p>和 fastbin dup类似</p>
 <p>简单来说</p>
-<p>通过两次连续的<code>free(&amp;(thunk-&gt;fd))</code>，使得<code>thunk-&gt;fd = &amp;(thunck)</code>,这时候如果能够修改<code>thunck-&gt;fd</code>的内容，就可以实现任意内存申请</p>
+<p>通过两次连续的<code>free(&amp;(chunk-&gt;fd))</code>，使得<code>chunk-&gt;fd = &amp;(thunck-&gt;fd)</code>,这时候如果能够修改<code>thunck-&gt;fd</code>的内容，就可以实现任意内存申请</p>
 <p>这里注意一个问题：实现下述语句的条件</p>
-<p>thunk-&gt;fd &#x3D; &amp;(thunck)</p>
-<p>是在tcache bins里只有thunk它本身，即	tcache bins : thunk</p>
-<p>如果说tcache bins里有其他的thunk如下：</p>
-<p>tcache bins : thunk0 -&gt; thunk1</p>
-<p>那么两次连续的<code>free(&amp;(thunk-&gt;fd))</code>（dup）得到的是<code>thunk-&gt;fd = &amp;(thunck0)</code>，也就是当前tcache bins的头链</p>
+<p>chunk-&gt;fd &#x3D; &amp;(thunck-&gt;fd)</p>
+<p>是在tcache bins里只有chunk它本身，即	tcache bins : &amp;(chunk-&gt;fd)</p>
+<p>如果说tcache bins里有其他的chunk如下：</p>
+<p>tcache bins : &amp;(chunk0-&gt;fd) -&gt;&amp;( chunk1-&gt;fd)</p>
+<p>那么两次连续的<code>free(&amp;(chunk-&gt;fd))</code>（dup）得到的是<code>chunk-&gt;fd = &amp;(thunck0-&gt;fd)</code>，也就是当前tcache bins的头链</p>
 </blockquote>
 <blockquote>
 <p>Q-A</p>
-<p>Q：为什么要double free？free一次，修改thunk-&gt;fd不也能修改链表吗</p>
-<p>A：在没有Edit功能的时候，通常只会在Add功能里能够修改thunk-&gt;fd，但是如果我把bins里唯一一个申请走了，修改将无效。</p>
+<p>Q：为什么要double free？free一次，修改chunk-&gt;fd不也能修改链表吗</p>
+<p>A：在没有Edit功能的时候，通常只会在Add功能里能够修改chunk-&gt;fd，但是如果我把bins里唯一一个申请走了，修改将无效。</p>
 </blockquote>
 <p><img src="/./../../../Images/1766586316002-988e7544-0a4c-4ad0-ab30-e710b99001a5.webp" srcset="/img/loading.gif" lazyload></p>
 

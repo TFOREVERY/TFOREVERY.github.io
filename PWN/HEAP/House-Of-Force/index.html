@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://tforevery.github.io/Images/1765780443604-932d9885-7b1e-4565-a1d0-2ea4960ed9df.png">
 <meta property="og:image" content="https://tforevery.github.io/Images/1765780536452-03d048e1-f7eb-4b75-87ab-7ca1f32464d0.png">
 <meta property="article:published_time" content="2025-12-23T16:55:07.000Z">
-<meta property="article:modified_time" content="2025-12-24T12:17:03.861Z">
+<meta property="article:modified_time" content="2025-12-29T16:25:19.555Z">
 <meta property="article:author" content="TY">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://tforevery.github.io/Images/1765780443604-932d9885-7b1e-4565-a1d0-2ea4960ed9df.png">
@@ -547,7 +547,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年12月24日 晚上
+                    本文最后更新于 2025年12月30日 凌晨
                   
                 
               </p>
@@ -590,7 +590,7 @@
 </li>
 <li>MALLOC_ALIGN_MASK：用来对齐的<code>x86_64下对齐0x10</code> <code>x86_32下对齐0x8</code>，也可以称为<code>对齐冗余</code></li>
 <li>SIZE_SZ：size字段的大小<ul>
-<li>为什么没有prev_size呢，因为在实际chunk中prev_size是归属于物理相邻的低地址thunk的</li>
+<li>为什么没有prev_size呢，因为在实际chunk中prev_size是归属于物理相邻的低地址chunk的</li>
 </ul>
 </li>
 </ul>
@@ -615,43 +615,43 @@
 <p>nb &#x3D; 0xffffffffffffffb0 [((req) + SIZE_SZ + MALLOC_ALIGN_MASK) &amp; ~MALLOC_ALIGN_MASK)]</p>
 </blockquote>
 <p>可以看到req和nb之间的差别在于SIZE_SZ + 对齐</p>
-<p>那么我们要求<code>req == nb</code>呢（这个很重要，关乎于我们控制top_thunk）</p>
+<p>那么我们要求<code>req == nb</code>呢（这个很重要，关乎于我们控制top_chunk）</p>
 <p>只要提前 <code>- (SIZE_SZ + MALLOC_ALIGN_MASK)</code>，并保证对齐即可</p>
-<h3 id="malloc-req-与top-thunk"><a href="#malloc-req-与top-thunk" class="headerlink" title="malloc(req)与top_thunk"></a>malloc(req)与top_thunk</h3><p>给出场景<code>top_thunk = 0x3955020</code></p>
+<h3 id="malloc-req-与top-chunk"><a href="#malloc-req-与top-chunk" class="headerlink" title="malloc(req)与top_chunk"></a>malloc(req)与top_chunk</h3><p>给出场景<code>top_chunk = 0x3955020</code></p>
 <p><img src="/../../../Images/1765780443604-932d9885-7b1e-4565-a1d0-2ea4960ed9df.png" srcset="/img/loading.gif" lazyload></p>
 <p>req &#x3D; 0x10[Add(0x10)]；nb &#x3D; 0x20</p>
-<p>top_thunk &#x3D; 0x3955040 </p>
+<p>top_chunk &#x3D; 0x3955040 </p>
 <p>0x3955040 - 0x3955020 &#x3D; 0x20 &#x3D;&#x3D; nb</p>
 <p><img src="/../../../Images/1765780536452-03d048e1-f7eb-4b75-87ab-7ca1f32464d0.png" srcset="/img/loading.gif" lazyload></p>
-<p>那么也就是说当我们<code>malloc(req)</code>的时候<code>top_thunk -= nb</code></p>
+<p>那么也就是说当我们<code>malloc(req)</code>的时候<code>top_chunk -= nb</code></p>
 <h1 id="Exploit条件"><a href="#Exploit条件" class="headerlink" title="Exploit条件"></a>Exploit条件</h1><ol>
 <li><font style="color:rgba(0, 0, 0, 0.87);">能够以溢出等方式控制到 top chunk 的 size 域</font></li>
 <li><font style="color:rgba(0, 0, 0, 0.87);">能够自由地控制堆分配尺寸的大小</font></li>
 </ol>
 <blockquote>
-<p><font style="color:rgba(0, 0, 0, 0.87);">top_thunk的地址存放在main_arena+0x58(88)上，也就是我们Unsorted bin leak出来的地址</font></p>
+<p><font style="color:rgba(0, 0, 0, 0.87);">top_chunk的地址存放在main_arena+0x58(88)上，也就是我们Unsorted bin leak出来的地址</font></p>
 </blockquote>
-<h2 id="无Top-thunk"><a href="#无Top-thunk" class="headerlink" title="无Top thunk"></a><font style="color:rgba(0, 0, 0, 0.87);">无Top thunk</font></h2><blockquote>
-<p>通过req来控制我们<font style="color:rgba(0, 0, 0, 0.87);">Top thunk的位置</font></p>
+<h2 id="无Top-chunk"><a href="#无Top-chunk" class="headerlink" title="无Top chunk"></a><font style="color:rgba(0, 0, 0, 0.87);">无Top chunk</font></h2><blockquote>
+<p>通过req来控制我们<font style="color:rgba(0, 0, 0, 0.87);">Top chunk的位置</font></p>
 <ul>
 <li>malloc(req)</li>
-<li>nb &#x3D; request2size(req)：依据需求对req进行手动转换nb，避免更新Top thunk地址错误</li>
-<li>Top thunk -&#x3D; nb</li>
+<li>nb &#x3D; request2size(req)：依据需求对req进行手动转换nb，避免更新Top chunk地址错误</li>
+<li>Top chunk -&#x3D; nb</li>
 </ul>
 <p><font style="color:rgba(0, 0, 0, 0.87);">局限</font></p>
 <ul>
-<li>Top thunk的地址不可控</li>
+<li>Top chunk的地址不可控</li>
 </ul>
 </blockquote>
-<h2 id="知晓Top-Thunk"><a href="#知晓Top-Thunk" class="headerlink" title="知晓Top Thunk"></a>知晓Top Thunk</h2><blockquote>
-<p>通过计算Top thunk与目标地址（Tag_Address）, 实现在目的地址附近创建堆块</p>
+<h2 id="知晓Top-chunk"><a href="#知晓Top-chunk" class="headerlink" title="知晓Top chunk"></a>知晓Top chunk</h2><blockquote>
+<p>通过计算Top chunk与目标地址（Tag_Address）, 实现在目的地址附近创建堆块</p>
 <ul>
-<li><p>offset &#x3D; Tag_Address - Top thunk - (SIZE_SZ * 2)</p>
+<li><p>offset &#x3D; Tag_Address - Top chunk - (SIZE_SZ * 2)</p>
 <ul>
 <li>(SIZE_SZ * 2) ： 预留<code>prev_size</code> <code>size</code></li>
 </ul>
 </li>
-<li><p>malloc(offset)：依据需求对offset进行手动转换nb，避免更新Top thunk地址错误</p>
+<li><p>malloc(offset)：依据需求对offset进行手动转换nb，避免更新Top chunk地址错误</p>
 <ul>
 <li>注意<code>size</code>域会被更新</li>
 </ul>
